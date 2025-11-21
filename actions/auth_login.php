@@ -1,40 +1,32 @@
 <?php
 session_start();
-include '../conn.php';
+include '../config/conn.php';
+include '../classes/users.php';
 
-//jika ws login, masuk ke dashboard
-if (isset($_SESSION['username'])) {
-    header("Location: ../dashboard.php");
-    exit();
-}
-$username = $_POST['txtusername'];
-$password = $_POST['txtpass'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-//ambil user berdasarkan username
-$stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
+    // Panggil Class Users
+    $userObj = new Users();
+    $userData = $userObj->login($conn, $username, $password);
 
-$result = $stmt->get_result();
+    if ($userData) {
+        // Simpan Session
+        $_SESSION['username'] = $userData['username'];
+        $_SESSION['role'] = $userData['role'];
+        $_SESSION['user_id'] = $userData['id'];
 
-if ($result->num_rows === 1) {
-    $row = $result->fetch_assoc();
-
-    if (password_verify($password, $row['password'])) {
-        $_SESSION['username'] = $row['username'];
-        $_SESSION['email'] = $row['email'];
-        $_SESSION['role'] = $row['role'];
-        // pindah ke dashboard
-        header("Location: ../dashboard.php");
+        // Redirect Sesuai Role
+        if ($userData['role'] == 'admin') {
+            header("Location: " . BASE_URL . "views/admin/dashboard.php");
+        } else {
+            header("Location: " . BASE_URL . "index.php");
+        }
         exit();
-        
     } else {
-        echo "Password salah";
+        // Login Gagal
+        echo "<script>alert('Username atau Password Salah!'); window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
     }
-} else {
-    echo "Username tidak ditemukan";
 }
-
-$stmt->close();
-$conn->close();
 ?>

@@ -1,66 +1,48 @@
 <?php
-
 class Users
 {
-    // data field
     public $username;
     public $email;
     public $password;
-    public $hashed_password;
-    public $photo;
-    public $alamat;
-    public $kota;
-    public $phone;
-    public $status;
-    public $role;
-    public $createdAt;
 
-    public function __construct($username, $email, $password, $photo, $alamat, $kota, $phone, $status = 'active', $role = 'user')
+    // LOGIN FUNCTION (OOP)
+    public function login($conn, $username, $password)
     {
-        $this->username = $username;
-        $this->email = $email;
-        $this->password = $password;
-        $this->hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $this->photo = $photo;
-        $this->alamat = $alamat;
-        $this->kota = $kota;
-        $this->phone = $phone;
-        $this->status = $status;
-        $this->role = $role;
-        $this->createdAt = date("Y-m-d H:i:s");
+        // 1. Siapkan Query (Cegah SQL Injection)
+        $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        // 2. Cek apakah user ada
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+
+            // 3. Cek Password Hash
+            if (password_verify($password, $row['password'])) {
+                return $row; // Login Sukses, kembalikan data user
+            }
+        }
+        return false; // Gagal
     }
 
-    public function insert($conn)
+    // REGISTER FUNCTION (Yang kamu kirim sebelumnya, dirapikan dikit)
+    public function register($conn, $data, $files)
     {
-        // ambil nama file
-        $photoName = $this->photo['name'];
-        $tmp   = $this->photo['tmp_name'];
+        $username = $data['txtusername'];
+        $email = $data['txtemail'];
+        $password = password_hash($data['txtpass'], PASSWORD_DEFAULT); // Hash disini
+        $alamat = $data['txtalamat'];
+        $kota = $data['txtkota'];
+        $phone = $data['txtphone'];
 
-        //folder tujuan
-        $folder = "../uploads/profile/" . $photoName;
+        // Upload Foto
+        $photoName = time() . '_' . $files['txtprofile']['name']; // Kasih time biar unik
+        move_uploaded_file($files['txtprofile']['tmp_name'], "../uploads/profile/" . $photoName);
 
-        //upload file
-        move_uploaded_file($tmp, $folder);
+        $stmt = $conn->prepare("INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, 'active', 'user', NOW())");
 
-        // Insert User baru ke database
-        $stmt = $conn->prepare("INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-
-        $status = 'active';
-        $role = 'user';
-
-        $stmt->bind_param(
-            "sssssssss",
-            $this->username,
-            $this->email,
-            $this->hashed_password,
-            $photoName,
-            $this->alamat,
-            $this->kota,
-            $this->phone,
-            $status,
-            $role
-        );
-
+        $stmt->bind_param("sssssss", $username, $email, $password, $photoName, $alamat, $kota, $phone);
         return $stmt->execute();
     }
 }
