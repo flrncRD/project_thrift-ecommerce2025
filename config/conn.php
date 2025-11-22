@@ -1,8 +1,8 @@
 <?php
-$servername = "127.0.0.1";  // Ganti dari localhost
-$username = "root";
-$password = "YOUR_PASSWORD";
-$db = "dbproyek25";
+$servername = "localhost";
+$username = "root";       // User default XAMPP
+$password = "";           // Password default XAMPP (KOSONG)
+$db = "dbproyek25";       // Nama database yang barusan dibuat
 
 $conn = mysqli_connect($servername, $username, $password, $db);
 

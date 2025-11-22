@@ -5,23 +5,23 @@ include '../classes/users.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // Validasi sederhana: Cek apakah username/email sudah ada
+    // 1. Ambil data dari form
     $username = $_POST['txtusername'];
-    $check = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
+    $email = $_POST['txtemail'];
 
+    // 2. Cek apakah username sudah dipakai? (Validasi Sederhana)
+    $check = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
     if (mysqli_num_rows($check) > 0) {
         echo "<script>
-                alert('Username sudah digunakan! Silakan cari yang lain.');
+                alert('Username sudah digunakan! Ganti yang lain.');
                 window.location.href = '" . BASE_URL . "views/auth/register.php';
               </script>";
         exit();
     }
 
-    // Panggil Class Users yang BARU
+    // 3. Panggil Class Users untuk simpan data
     $userObj = new Users();
-
-    // Panggil function register() bukan insert()
-    // Kita kirim $_POST (data teks) dan $_FILES (data gambar) langsung ke sana
+    // Kita kirim $_POST (data teks) dan $_FILES (data gambar)
     $result = $userObj->register($conn, $_POST, $_FILES);
 
     if ($result) {
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 window.location.href = '" . BASE_URL . "views/auth/login.php';
               </script>";
     } else {
-        echo "Terjadi kesalahan: " . mysqli_error($conn);
+        echo "Terjadi kesalahan sistem: " . mysqli_error($conn);
     }
 }
 ?>

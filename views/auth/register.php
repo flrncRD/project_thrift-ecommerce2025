@@ -1,42 +1,65 @@
+<?php include '../../config/conn.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Daftar Akun - PindaHand</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen py-10">
 
-    <h2>Register Akun</h2>
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border-t-4 border-[#059669]">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-[#059669]">Gabung PindaHand</h1>
+            <p class="text-sm text-gray-500">Mulai jualan atau belanja barang thrift.</p>
+        </div>
 
-    <form action="cek_register.php" method="POST" enctype="multipart/form-data">
+        <form action="<?= BASE_URL ?>actions/auth_register.php" method="POST" enctype="multipart/form-data">
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                <input type="text" name="txtusername" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+            </div>
 
-        <label for="txtusername">Username:</label><br>
-        <input type="text" id="txtusername" name="txtusername" required><br><br>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                <input type="email" name="txtemail" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+            </div>
 
-        <label for="txtemail">Email:</label><br>
-        <input type="email" id="txtemail" name="txtemail" required><br><br>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input type="password" name="txtpass" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+            </div>
 
-        <label for="txtpass">Password:</label><br>
-        <input type="password" id="txtpass" name="txtpass" required><br><br>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Alamat</label>
+                    <input type="text" name="txtalamat" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Kota</label>
+                    <input type="text" name="txtkota" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+                </div>
+            </div>
 
-        <label for="txtalamat">Alamat:</label><br>
-        <input type="text" id="txtalamat" name="txtalamat" required><br><br>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">No Handphone</label>
+                <input type="text" name="txtphone" required class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#059669]">
+            </div>
 
-        <label for="txtkota">Kota:</label><br>
-        <input type="text" id="txtkota" name="txtkota" required><br><br>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Foto Profil</label>
+                <input type="file" name="txtprofile" accept="image/*" required class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-[#059669] hover:file:bg-green-100">
+            </div>
 
-        <label for="txtphone">Nomor Telepon:</label><br>
-        <input type="text" id="txtphone" name="txtphone" required><br><br>
+            <button type="submit" class="w-full bg-[#059669] text-white font-bold py-2 px-4 rounded hover:bg-emerald-700 transition">
+                DAFTAR SEKARANG
+            </button>
+        </form>
 
-        <label for="txtprofile">Foto Profil:</label><br>
-        <input type="file" id="txtprofile" name="txtprofile" accept="image/*" required><br><br>
-
-        <input type="submit" value="Register">
-
-        <p>Already have an account? <a href="login.php">Login here</a></p>
-
-    </form>
+        <p class="text-center mt-4 text-sm">
+            Sudah punya akun? <a href="login.php" class="text-[#1E3A8A] font-bold hover:underline">Masuk Disini</a>
+        </p>
+    </div>
 
 </body>
 </html>
