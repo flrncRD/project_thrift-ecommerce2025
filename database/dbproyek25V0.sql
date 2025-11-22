@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2025 at 04:46 PM
+-- Generation Time: Nov 14, 2025 at 08:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -140,13 +140,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`id`, `username`, `email`, `password`, `photo`, `alamat`, `kota`, `phone`, `status`, `role`, `createdAt`) VALUES
-(1, 'admin0', 'admin0@gmail.com', '$2y$10$LCpWQG9UTQK0js4mVO7PKORSwpvTApXQ.oRMz24f4//viWdidCMDO', '1763826297_Chiki-ChikckenDoll.jpeg', 'admin0siwalankerto', 'admin0sby', '012345678', 'active', 'user', '2025-11-22 15:44:57');
-
---
 -- Indexes for dumped tables
 --
 
@@ -245,7 +238,7 @@ ALTER TABLE `transaksi`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

@@ -1,17 +1,16 @@
 <?php
-// config/conn.php
 $servername = "localhost";
-$username = "root";
-$password = "";
-$db = "dbproyek25";
+$username = "root";       // User default XAMPP
+$password = "";           // Password default XAMPP (KOSONG)
+$db = "dbproyek25";       // Nama database yang barusan dibuat
 
 $conn = mysqli_connect($servername, $username, $password, $db);
 
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    die("Koneksi Gagal: " . mysqli_connect_error());
 }
 
-// DEFINE BASE URL (Ganti sesuai nama folder di htdocs kamu)
-// Pastikan ada tanda slash '/' di belakang
+mysqli_set_charset($conn, "utf8mb4");
+
 define('BASE_URL', 'http://localhost/pindahand/');
 ?>

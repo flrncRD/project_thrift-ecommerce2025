@@ -1,53 +1,36 @@
-<?php 
-include '../conn.php';
-include '../class/users.php';
+<?php
+session_start();
+include '../config/conn.php';
+include '../classes/users.php';
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    // 1. Ambil data dari form
     $username = $_POST['txtusername'];
-    $email    = $_POST['txtemail'];
-    $password = $_POST['txtpass'];
-    $alamat   = $_POST['txtalamat'];
-    $kota     = $_POST['txtkota'];
-    $phone    = $_POST['txtphone'];
+    $email = $_POST['txtemail'];
 
-    // HASH PASSWORD
-    // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    // password flo: 12345
-
-    // Cek username sudah ada atau belum
+    // 2. Cek apakah username sudah dipakai? (Validasi Sederhana)
     $check = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
-    if(mysqli_num_rows($check) > 0){
-        echo "Username sudah digunakan. <a href='register.php'>Kembali</a>";
+    if (mysqli_num_rows($check) > 0) {
+        echo "<script>
+                alert('Username sudah digunakan! Ganti yang lain.');
+                window.location.href = '" . BASE_URL . "views/auth/register.php';
+              </script>";
         exit();
     }
 
-    //Buat object user baru
-    $u = new Users($username, $email, $password, $_FILES['txtprofile'], $alamat, $kota, $phone);
-    
-    if ($u->insert($conn)) {
-    echo "Registrasi berhasil! <a href='login.php'>Login sekarang</a>";
+    // 3. Panggil Class Users untuk simpan data
+    $userObj = new Users();
+    // Kita kirim $_POST (data teks) dan $_FILES (data gambar)
+    $result = $userObj->register($conn, $_POST, $_FILES);
+
+    if ($result) {
+        echo "<script>
+                alert('Registrasi Berhasil! Silakan Login.');
+                window.location.href = '" . BASE_URL . "views/auth/login.php';
+              </script>";
     } else {
-        echo "Terjadi kesalahan: " . mysqli_error($conn);
+        echo "Terjadi kesalahan sistem: " . mysqli_error($conn);
     }
 }
-
-//     // Simpan profile foto
-//     $photo = $_FILES['txtprofile']['name'];
-//     $tmp = $_FILES['txtprofile']['tmp_name'];
-
-//     $folder = "../uploads/profile/" . $photo;
-
-//     move_uploaded_file($tmp, $folder);
-    
-//     // Insert User baru
-//     $sql = "INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt)
-//             VALUES ('$username', '$email', '$hashed_password', '$photo', '$alamat', '$kota', '$phone', 
-//                     'active', 'user', NOW())";
-
-//     if(mysqli_query($conn, $sql)){
-//         echo "Registrasi berhasil! <a href='login.php'>Login sekarang</a>";
-//     } else {
-//         echo "Terjadi kesalahan: " . mysqli_error($conn);
-//     }
-// }
 ?>

@@ -1,0 +1,32 @@
+/* PINDAHAND OFFICIAL PALETTE */
+:root {
+    --color-navy: #1E3A8A;
+    /* Trust */
+    --color-emerald: #059669;
+    /* Nature */
+    --color-yellow: #FACC15;
+    /* Joy */
+    --bg-slate: #F8FAFC;
+}
+
+/* Utility Khusus untuk Barang Habis (OOS) */
+.card-oos {
+    opacity: 0.6;
+    filter: grayscale(100%);
+    pointer-events: none;
+    /* Tidak bisa diklik */
+}
+
+.card-oos::after {
+    content: "HABIS";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: black;
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 4px;
+}
