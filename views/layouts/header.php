@@ -2,11 +2,11 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Helper function untuk set menu aktif
+// Helper function
 function isActive($page)
 {
-    // Cek apakah URL saat ini mengandung kata kunci halaman
-    return strpos($_SERVER['REQUEST_URI'], $page) !== false ? 'bg-[#059669] text-white shadow-md' : 'hover:bg-blue-800 text-blue-100';
+    // Active State: Background Emerald, Teks Putih, Shadow
+    return strpos($_SERVER['REQUEST_URI'], $page) !== false ? 'bg-[#059669] text-white shadow-lg ring-2 ring-white/20' : 'hover:bg-white/10 text-blue-100';
 }
 ?>
 <!DOCTYPE html>
@@ -18,136 +18,159 @@ function isActive($page)
     <title>PindaHand - Thrift Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script src="<?= BASE_URL ?>assets/js/script.js" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-[#F8FAFC] font-[Inter] text-slate-800 overflow-x-hidden">
 
     <nav
-        class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 shadow-sm h-16 flex items-center px-4 justify-between transition-all duration-300">
+        class="fixed top-0 z-50 w-full bg-white border-b-2 border-gray-200 h-20 flex items-center px-6 justify-between shadow-sm">
 
-        <div class="flex items-center gap-4">
-            <button onclick="toggleSidebar()"
-                class="p-2 rounded-lg hover:bg-gray-100 text-[#1E3A8A] focus:outline-none transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h7">
-                    </path>
-                </svg>
-            </button>
-
+        <div class="flex items-center gap-6 w-28 md:w-64">
             <a href="<?= BASE_URL ?>index.php"
-                class="text-xl font-extrabold flex items-center gap-1 text-[#1E3A8A] tracking-tight">
+                class="text-2xl md:text-3xl font-black flex items-center gap-1 text-[#1E3A8A] tracking-tight hover:scale-105 transition">
                 Pinda<span class="text-[#059669]">Hand</span>
-                <div class="w-2 h-2 rounded-full bg-[#FACC15] ml-1 animate-pulse"></div>
+                <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#FACC15] ml-1"></div>
             </a>
         </div>
 
-        <div class="hidden md:flex flex-1 max-w-2xl mx-8">
-            <div class="relative w-full group">
-                <input type="text" placeholder="Cari jaket vintage, sneakers..."
-                    class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full focus:ring-2 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] block w-full pl-5 p-2.5 transition-all">
-                <button class="absolute right-0 top-0 h-full px-4 text-gray-500 hover:text-[#1E3A8A] transition">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        <div class="hidden md:flex flex-1 max-w-3xl mx-4">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-5 text-[#1E3A8A]">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                </button>
+                </span>
+                <input type="text" placeholder="Cari barang disini..."
+                    class="w-full bg-gray-100 border-2 border-transparent text-gray-800 text-base font-medium rounded-full py-3 pl-14 pr-6 focus:outline-none focus:bg-white focus:border-[#1E3A8A] focus:ring-0 transition placeholder-gray-500 shadow-inner">
             </div>
         </div>
 
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4 md:gap-8">
+
             <?php if (isset($_SESSION['username'])): ?>
                 <a href="<?= BASE_URL ?>views/store/add.php"
-                    class="hidden md:flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-[#1E3A8A] px-4 py-2 rounded-full font-bold text-sm transition-all hover:shadow-md">
-                    <span>+ Jual</span>
+                    class="hidden md:flex items-center gap-2 bg-[#FACC15] text-[#1E3A8A] px-5 py-2.5 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-md border-2 border-[#1E3A8A]/10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <span>Jual</span>
                 </a>
 
-                <div class="flex items-center gap-3 border-l border-gray-300 pl-4 ml-2">
-                    <div class="text-right hidden md:block leading-tight">
-                        <p class="text-sm font-bold text-[#1E3A8A]"><?= $_SESSION['username'] ?></p>
-                        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide"><?= $_SESSION['role'] ?>
-                        </p>
-                    </div>
-                    <div
-                        class="w-9 h-9 rounded-full bg-gradient-to-br from-[#1E3A8A] to-blue-700 text-white flex items-center justify-center font-bold shadow-sm border-2 border-white">
-                        <?= strtoupper(substr($_SESSION['username'], 0, 1)) ?>
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex items-center gap-3 focus:outline-none group">
+                        <div class="text-right hidden md:block">
+                            <p class="text-base font-bold text-[#1E3A8A] leading-tight"><?= $_SESSION['username'] ?></p>
+                            <p class="text-xs font-bold text-[#059669] uppercase tracking-wide"><?= $_SESSION['role'] ?></p>
+                        </div>
+                        <div
+                            class="w-10 h-10 md:w-11 md:h-11 rounded-full bg-[#1E3A8A] border-2 border-[#FACC15] flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-105 transition">
+                            <?= strtoupper(substr($_SESSION['username'], 0, 1)) ?>
+                        </div>
+                    </button>
+
+                    <div x-show="open" @click.away="open = false" x-transition
+                        class="absolute right-0 mt-4 w-80 bg-white rounded-xl shadow-2xl border-2 border-gray-100 py-2 z-50"
+                        style="display: none;">
+                        <div class="py-2">
+                            <a href="<?= BASE_URL ?>views/user/profile.php"
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <span class="w-8 text-xl text-center">👤</span> Profil Saya
+                            </a>
+                            <a href="<?= BASE_URL ?>views/transaction/history.php"
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <span class="w-8 text-xl text-center">📦</span> Riwayat Pesanan
+                            </a>
+                        </div>
+                        <div class="border-t border-gray-200 my-1"></div>
+                        <a href="<?= BASE_URL ?>actions/auth_logout.php"
+                            class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition">
+                            <span class="w-8 text-xl text-center">🚪</span> Keluar (Logout)
+                        </a>
                     </div>
                 </div>
             <?php else: ?>
-                <a href="<?= BASE_URL ?>views/auth/login.php"
-                    class="text-sm font-bold text-white bg-[#1E3A8A] px-5 py-2 rounded-full hover:bg-blue-900 shadow-lg shadow-blue-900/30 transition transform hover:-translate-y-0.5">
-                    Login
-                </a>
+                <div class="flex items-center gap-4 text-base font-bold text-gray-600">
+                    <a href="<?= BASE_URL ?>views/auth/login.php"
+                        class="text-[#1E3A8A] hover:underline decoration-2 underline-offset-4">Masuk</a>
+                    <a href="<?= BASE_URL ?>views/auth/register.php"
+                        class="bg-[#1E3A8A] text-white px-6 py-2.5 rounded-full hover:bg-blue-900 shadow-lg transition">Daftar</a>
+                </div>
             <?php endif; ?>
         </div>
     </nav>
 
-    <aside id="sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform duration-300 ease-in-out -translate-x-full bg-[#1E3A8A] border-r border-blue-800 shadow-2xl transform">
-        <div class="h-full px-4 pb-4 overflow-y-auto flex flex-col justify-between">
+    <aside
+        class="fixed top-20 left-0 z-40 w-28 h-[calc(100vh-5rem)] bg-[#1E3A8A] flex flex-col items-center py-6 shadow-2xl border-r border-blue-800 overflow-y-auto">
 
-            <div>
-                <ul class="space-y-1 font-medium mt-4">
-                    <li>
-                        <a href="<?= BASE_URL ?>index.php"
-                            class="flex items-center p-3 rounded-lg group transition-all <?= isActive('index.php') ?>">
-                            <span class="text-xl">🏠</span>
-                            <span class="ml-3">Beranda</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="border-t border-blue-700/50 my-4"></div>
-
-                <?php if (isset($_SESSION['username'])): ?>
-                    <p class="px-3 text-xs font-bold text-blue-400 uppercase mb-2 tracking-wider">Menu Saya</p>
-                    <ul class="space-y-1 font-medium">
-                        <li>
-                            <a href="<?= BASE_URL ?>views/transaction/cart.php"
-                                class="flex items-center p-3 rounded-lg group transition-all <?= isActive('cart.php') ?>">
-                                <span class="text-xl">🛒</span>
-                                <span class="ml-3">Keranjang</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL ?>views/store/my_products.php"
-                                class="flex items-center p-3 rounded-lg group transition-all <?= isActive('my_products.php') ?>">
-                                <span class="text-xl">🏪</span>
-                                <span class="ml-3">Toko Saya</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL ?>views/transaction/history.php"
-                                class="flex items-center p-3 rounded-lg group transition-all <?= isActive('history.php') ?>">
-                                <span class="text-xl">📜</span>
-                                <span class="ml-3">Riwayat Transaksi</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="<?= BASE_URL ?>views/user/profile.php"
-                                class="flex items-center p-3 rounded-lg group transition-all <?= isActive('profile.php') ?>">
-                                <span class="text-xl">⚙️</span>
-                                <span class="ml-3">Pengaturan Profil</span>
-                            </a>
-                        </li>
-                    </ul>
-                <?php endif; ?>
+        <a href="<?= BASE_URL ?>index.php" class="flex flex-col items-center gap-2 mb-6 group w-full px-2">
+            <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('index.php') ?>">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                    </path>
+                </svg>
             </div>
+            <span class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition">Beranda</span>
+        </a>
 
-            <?php if (isset($_SESSION['username'])): ?>
-                <div class="mb-20 md:mb-4">
-                    <a href="<?= BASE_URL ?>actions/auth_logout.php"
-                        class="flex items-center p-3 rounded-lg bg-blue-900/50 text-red-300 hover:bg-red-600 hover:text-white group transition-all border border-blue-800 hover:border-red-500">
-                        <span class="text-xl">🚪</span>
-                        <span class="ml-3 font-bold">Logout</span>
-                    </a>
+        <?php if (isset($_SESSION['username'])): ?>
+            <a href="<?= BASE_URL ?>views/store/my_products.php"
+                class="flex flex-col items-center gap-2 mb-6 group w-full px-2">
+                <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('my_products.php') ?>">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m8-2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
                 </div>
-            <?php endif; ?>
+                <span
+                    class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition leading-tight">Toko<br>Saya</span>
+            </a>
 
-        </div>
+            <a href="<?= BASE_URL ?>views/transaction/cart.php"
+                class="flex flex-col items-center gap-2 mb-6 group w-full px-2">
+                <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('cart.php') ?>">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                </div>
+                <span
+                    class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition">Keranjang</span>
+            </a>
+
+            <a href="<?= BASE_URL ?>views/transaction/history.php"
+                class="flex flex-col items-center gap-2 mb-6 group w-full px-2">
+                <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('history.php') ?>">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+                </div>
+                <span
+                    class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition leading-tight">Riwayat</span>
+            </a>
+
+            <a href="<?= BASE_URL ?>views/user/profile.php"
+                class="mt-auto mb-8 flex flex-col items-center gap-2 group w-full px-2">
+                <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('profile.php') ?>">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition">Akun</span>
+            </a>
+        <?php endif; ?>
+
     </aside>
 
-    <div id="main-content" class="p-6 transition-all duration-300 pt-24 min-h-screen w-full">
-
-        <div id="main-content" class="p-6 transition-all duration-300 pt-24 min-h-screen">
+    <div id="main-content" class="pl-28 pt-24 min-h-screen w-full pr-6">
