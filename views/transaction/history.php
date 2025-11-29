@@ -128,7 +128,7 @@ $result = mysqli_query($conn, $sql);
                                             Review
                                         </a>
                                     <?php else: ?>
-                                        <a href="detail_transaksi.php?id=<?= $row['id'] ?>"
+                                        <a href="invoice.php?id=<?= $row['id'] ?>"
                                             class="text-[#1E3A8A] underline hover:text-blue-700">Detail</a>
                                     <?php endif; ?>
 
@@ -142,7 +142,7 @@ $result = mysqli_query($conn, $sql);
                                             Kirim Barang
                                         </a>
                                     <?php else: ?>
-                                        <a href="detail_transaksi.php?id=<?= $row['id'] ?>" class="text-gray-500 underline">Lihat</a>
+                                        <a href="invoice.php?id=<?= $row['id'] ?>" class="text-gray-500 underline">Lihat</a>
                                     <?php endif; ?>
                                 <?php endif; ?>
                             </td>

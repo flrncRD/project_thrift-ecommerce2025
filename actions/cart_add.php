@@ -1,0 +1,47 @@
+<?php
+session_start();
+include '../config/conn.php';
+
+// Cek Login
+if (!isset($_SESSION['user_id'])) {
+    echo "<script>alert('Silakan login untuk belanja!'); window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $product_id = $_POST['product_id'];
+    
+    // Ambil Data Produk dari DB untuk memastikan
+    $query = mysqli_query($conn, "SELECT * FROM product WHERE id = '$product_id'");
+    $product = mysqli_fetch_assoc($query);
+
+    if (!$product) {
+        die("Produk tidak valid.");
+    }
+
+    // Buat Struktur Session Cart jika belum ada
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+
+    // Cek apakah produk sudah ada di keranjang?
+    if (isset($_SESSION['cart'][$product_id])) {
+        // Jika sudah ada, tambah qty
+        $_SESSION['cart'][$product_id]['qty'] += 1;
+    } else {
+        // Jika belum, masukkan data baru
+        $_SESSION['cart'][$product_id] = [
+            'id' => $product['id'],
+            'name' => $product['nama_product'],
+            'price' => $product['harga'],
+            'photo' => $product['photo'],
+            'qty' => 1
+        ];
+    }
+
+    echo "<script>
+            alert('Berhasil masuk keranjang!'); 
+            window.location.href = '" . BASE_URL . "views/transaction/cart.php';
+          </script>";
+}
+?>

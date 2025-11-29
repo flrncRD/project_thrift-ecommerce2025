@@ -1,6 +1,5 @@
-<?
+<?php 
 class Transaksi {
-    public $id;
     public $buyer_id;
     public $product_id;
     public $harga;
@@ -35,34 +34,59 @@ class Transaksi {
             throw new Exception("Jenis pembayaran tidak valid. Harus 'transfer' atau 'cod'.");
         }
 
-        //Validasi bukti tf
-        if ($this->jenis_pembayaran === 'transfer' && (empty($this->transfer) || $this->transfer['name'] == '')) {
-            throw new Exception("Bukti transfer wajib diunggah");
+        // Validasi bukti tf
+        // Cek jika transfer dan file kosong
+        if ($this->jenis_pembayaran === 'transfer' && (empty($this->transfer) || $this->transfer['error'] == 4)) {
+            throw new Exception("Bukti transfer wajib diunggah untuk pembayaran via Transfer.");
         }
 
-        //Validasi cod
+        // Validasi cod
         if ($this->jenis_pembayaran === 'cod') {
             $this->cod = 1;
         } else {
             $this->cod = 0;
+        }
     }
-}
+
     public function insert($conn) {
-        //ambil nama file
-        $buktiTransfer = $this->transfer['name'];
-        $tmp   = $this->transfer['tmp_name'];
+        $buktiTransfer = null;
 
-        //folder tujuan
-        $folder = "../uploads/transfer/" . $buktiTransfer;
+        // Hanya upload jika ada file dan jenisnya transfer
+        if ($this->jenis_pembayaran === 'transfer' && !empty($this->transfer['name'])) {
+            // Ambil nama file dan kasih timestamp biar unik
+            $buktiTransfer = time() . '_' . $this->transfer['name'];
+            $tmp = $this->transfer['tmp_name'];
+            
+            // Folder tujuan (Pastikan folder ini ada)
+            $folder = "../uploads/transfer/";
+            
+            // Upload file
+            if (!move_uploaded_file($tmp, $folder . $buktiTransfer)) {
+                throw new Exception("Gagal mengupload bukti transfer.");
+            }
+        }
 
-        //upload file
-        move_uploaded_file($tmp, $folder);
-
-        $sql = "INSERT INTO transaksi (buyer_id, product_id, harga, qty, alamat_buyer, kota_buyer, phone_buyer, jenis_pembayaran, total_harga, transfer, cod, status, createdAt)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NOW())";
+        $sql = "INSERT INTO transaksi (buyer_id, product_id, harga, qty, alamat_buyer, kota_buyer, phone_buyer, jenis_pembayaran, total_harga, transfer, cod, status, createdAt) 
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NOW())";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiisissisisi", $this->buyer_id, $this->product_id, $this->harga, $this->qty, $this->alamat_buyer, $this->kota_buyer, $this->phone_buyer, $this->jenis_pembayaran, $this->total_harga, $buktiTransfer, $this->cod, $this->status);
+        
+        // Perhatikan tipe datanya: i (integer), s (string), d (double/decimal)
+        $stmt->bind_param("iiisisssisii", 
+            $this->buyer_id, 
+            $this->product_id, 
+            $this->harga, 
+            $this->qty, 
+            $this->alamat_buyer, 
+            $this->kota_buyer, 
+            $this->phone_buyer, 
+            $this->jenis_pembayaran, 
+            $this->total_harga, 
+            $buktiTransfer, 
+            $this->cod, 
+            $this->status
+        );
+        
         return $stmt->execute();
     }
 }
