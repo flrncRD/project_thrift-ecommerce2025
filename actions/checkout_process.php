@@ -1,102 +1,55 @@
 <?php
-// NYALAKAN ERROR REPORTING
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 include '../config/conn.php';
 include '../classes/transaksi.php';
 
-// Cek Login & Method
-if (!isset($_SESSION['user_id']) || $_SERVER['REQUEST_METHOD'] != 'POST') {
-    die("Akses ditolak atau metode salah.");
+//Pastikan user sudah login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: " . BASE_URL . "views/auth/login.php");
+    exit;
 }
 
-$buyer_id = $_SESSION['user_id'];
-$phone = $_POST['phone'];
-$kota = $_POST['kota'];
-$alamat = $_POST['alamat'];
-$payment_method = $_POST['payment_method']; 
-$bukti_transfer = $_FILES['bukti_transfer'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-// Ambil Keranjang
-$cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+    $buyer_id        = $_SESSION['user_id'];
+    $product_id      = $_POST['product_id'];
+    $harga           = $_POST['harga'];
+    $qty             = $_POST['qty'];
+    $nama_buyer      = $_POST['nama_buyer'];
+    $alamat_buyer    = $_POST['alamat_buyer'];
+    $kota_buyer      = $_POST['kota_buyer'];
+    $phone_buyer     = $_POST['phone_buyer'];
+    $jenis_pembayaran = $_POST['jenis_pembayaran'];
+    $jenis_pengiriman = $_POST['jenis_pengiriman'];
 
-if (empty($cart)) {
-    echo "<script>alert('Keranjang kosong!'); window.location.href='../views/transaction/cart.php';</script>";
-    exit();
-}
+    try {
 
-// BUAT FOLDER OTOMATIS JIKA BELUM ADA (Anti Error Upload)
-$target_dir = "../uploads/transfer/";
-if (!file_exists($target_dir)) {
-    mkdir($target_dir, 0777, true);
-}
-
-// Mulai Transaksi Database
-mysqli_begin_transaction($conn);
-
-try {
-    foreach ($cart as $product_id => $item) {
-        
-        $total_harga_item = $item['price'] * $item['qty'];
-        
-        // Logika COD
-        if ($payment_method === 'cod') {
-            $cod_status = 1;
-            $status_trx = 'Packing';
-        } else {
-            $cod_status = 0;
-            $status_trx = 'Terbayar';
-        }
-
-        // 1. Inisialisasi Class Transaksi (Pastikan urutan sama dengan classes/transaksi.php)
-        $trxObj = new Transaksi(
-            $buyer_id, 
-            $product_id, 
-            $item['price'], 
-            $item['qty'], 
-            $alamat, 
-            $kota, 
-            $phone, 
-            $payment_method, 
-            $total_harga_item, 
-            $bukti_transfer, 
-            $cod_status, 
-            $status_trx
+        // Buat objek transaksi
+        $transaksi = new Transaksi(
+            $buyer_id,
+            $product_id,
+            $harga,
+            $qty,
+            $nama_buyer,
+            $alamat_buyer,
+            $kota_buyer,
+            $phone_buyer,
+            $jenis_pembayaran,
+            $jenis_pengiriman,
+            'Terbayar'
         );
 
-        // 2. Simpan Transaksi
-        if (!$trxObj->insert($conn)) {
-            throw new Exception("Gagal menyimpan transaksi SQL: " . mysqli_error($conn));
+        // Insert ke database
+        if ($transaksi->insert($conn)) {
+            header("Location: ../../market/history.php");
+            exit;
+        } else {
+            echo "Terjadi kesalahan saat memproses transaksi.";
         }
 
-        // 3. Kurangi Stok Produk
-        $qty = $item['qty'];
-        $updateStock = mysqli_query($conn, "UPDATE product SET stok = stok - $qty WHERE id = '$product_id'");
-        
-        if (!$updateStock) {
-            throw new Exception("Gagal update stok produk.");
-        }
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
-
-    // Commit
-    mysqli_commit($conn);
-
-    // 4. Kosongkan Keranjang
-    unset($_SESSION['cart']);
-
-    // 5. Redirect Sukses
-    echo "<script>
-            alert('Pesanan berhasil dibuat! Terima kasih.'); 
-            window.location.href = '" . BASE_URL . "views/transaction/history.php';
-          </script>";
-
-} catch (Exception $e) {
-    // Rollback
-    mysqli_rollback($conn);
-    // Tampilkan Error Jelas
-    die("TERJADI ERROR: " . $e->getMessage());
 }
+
 ?>

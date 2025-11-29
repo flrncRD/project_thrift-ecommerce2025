@@ -39,6 +39,19 @@ class Products
         return $stmt->get_result();
     }
 
+    // FUNGSI AMBIL PRODUK UNTUK DETAIL PRODUK
+    public function getById($conn, $id)
+    {
+        $sql = "SELECT p.*, k.nama_kategori 
+                FROM product p 
+                JOIN kategori k ON p.kategori_id = k.id 
+                WHERE p.id = ? ORDER BY p.createdAt DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
     // FUNGSI AMBIL SEMUA PRODUK (Untuk Halaman Depan/Home)
     public function getAll($conn)
     {

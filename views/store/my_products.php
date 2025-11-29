@@ -57,7 +57,7 @@ $myProducts = $productObj->getByUser($conn, $_SESSION['user_id']);
                                 <?php endif; ?>
                             </td>
                             <td class="py-4 px-6">
-                                <a href="#" class="text-blue-600 hover:underline mr-3">Edit</a>
+                                <a href="edit.php" class="text-blue-600 hover:underline mr-3">Edit</a>
                                 <a href="#" class="text-red-600 hover:underline">Hapus</a>
                             </td>
                         </tr>

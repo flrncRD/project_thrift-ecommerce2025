@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Reviews {
     public $transaksi_id;
@@ -17,6 +17,8 @@ class Reviews {
         // Insert Review baru ke database
         $sql = "INSERT INTO review (transaksi_id, rating, review, createdAt)
             VALUES ('$this->transaksi_id', '$this->rating', '$this->review', NOW())";
+
+        return $conn->query($sql);
     }
 }
 
