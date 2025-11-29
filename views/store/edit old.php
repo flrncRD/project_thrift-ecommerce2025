@@ -3,19 +3,8 @@ include '../../config/conn.php';
 include '../../views/layouts/header.php';
 include '../../classes/products.php';
 
-// CEK APAKAH ADA ID PRODUK
-if (!isset($_GET['id'])) {
-    echo "<script>alert('Produk tidak ditemukan!'); window.location='my_products.php';</script>";
-    exit;
-}
-
-$product_id = $_GET['id'];
-
-$Product = new Products();
-$data = $Product->getById($conn, $product_id)->fetch_assoc();
-
-// Ambil kategori
-$kategoriData = mysqli_query($conn, "SELECT * FROM product");
+// Ambil Kategori untuk Dropdown
+$kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
 ?>
 
 <div class="container mx-auto px-6 py-10 flex justify-center">
@@ -24,12 +13,9 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
 
         <form action="<?= BASE_URL ?>actions/product_edit.php" method="POST" enctype="multipart/form-data">
 
-            <!-- ID HIDDEN -->
-            <input type="hidden" name="product_id" value="<?= $data['id'] ?>">
-
             <div class="mb-4">
                 <label class="block text-gray-700 font-bold mb-2">Nama Barang</label>
-                <input type="text" name="nama_product" value="<?= $data['nama_product'] ?>" required
+                <input type="text" name="nama_product" required
                     class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
             </div>
 
@@ -39,19 +25,14 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
                     <select name="kategori_id" required
                         class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none bg-white">
                         <option value="">Pilih Kategori</option>
-
                         <?php while ($k = mysqli_fetch_assoc($kategoriData)): ?>
-                            <option value="<?= $k['id'] ?>"
-                                <?= $k['id'] == $data['kategori_id'] ? 'selected' : '' ?>>
-                                <?= $k['nama_kategori'] ?>
-                            </option>
+                            <option value="<?= $k['id'] ?>"><?= $k['nama_kategori'] ?></option>
                         <?php endwhile; ?>
                     </select>
                 </div>
-
                 <div>
                     <label class="block text-gray-700 font-bold mb-2">Harga (Rp)</label>
-                    <input type="number" name="harga" value="<?= $data['harga'] ?>" required
+                    <input type="number" name="harga" required
                         class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
                 </div>
             </div>
@@ -59,34 +40,30 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-gray-700 font-bold mb-2">Stok</label>
-                    <input type="number" name="stok" value="<?= $data['stok'] ?>" required
+                    <input type="number" name="stok" value="1" required
                         class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
                 </div>
-
                 <div>
-                    <label class="block text-gray-700 font-bold mb-2">Foto Barang (Opsional)</label>
-                    <input type="file" name="photo" accept="image/*"
+                    <label class="block text-gray-700 font-bold mb-2">Foto Barang</label>
+                    <input type="file" name="photo" accept="image/*" required
                         class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-50 file:text-yellow-700 hover:file:bg-yellow-100">
-                    <p class="text-xs text-gray-500 mt-1">Biarkan kosong jika tidak ganti foto</p>
                 </div>
             </div>
 
             <div class="mb-6">
                 <label class="block text-gray-700 font-bold mb-2">Deskripsi Kondisi & Minus</label>
                 <textarea name="description" rows="4" required
-                    class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none"><?= $data['description'] ?></textarea>
+                    class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none"></textarea>
             </div>
 
             <div class="flex gap-4">
                 <a href="my_products.php"
                     class="px-6 py-2 border border-gray-300 rounded text-gray-600 hover:bg-gray-50">Batal</a>
-
                 <button type="submit"
                     class="flex-1 bg-[#1E3A8A] text-white font-bold py-2 px-4 rounded hover:bg-blue-900 transition">
                     UPDATE
                 </button>
             </div>
-
         </form>
     </div>
 </div>

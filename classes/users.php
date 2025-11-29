@@ -45,5 +45,14 @@ class Users
         $stmt->bind_param("sssssss", $username, $email, $password, $photoName, $alamat, $kota, $phone);
         return $stmt->execute();
     }
+
+   public function getById($conn, $id)
+    {
+    $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result();
+    }
+
 }
 ?>
