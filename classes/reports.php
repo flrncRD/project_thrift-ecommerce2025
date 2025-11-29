@@ -10,7 +10,7 @@ class Reports {
 
     private $opsiJenisReport = ['product', 'user', 'transaction'];
 
-    public function __construct($user_id, $jenis_report, $reference_id, $alasan, $status = 'Reported')
+    public function __construct($user_id, $jenis_report, $reference_id, $alasan, $status = 'reported')
     {
         // Validasi jenis_report
         if (!in_array($jenis_report, $this->opsiJenisReport)) {
@@ -26,7 +26,7 @@ class Reports {
         $this->jenis_report = $jenis_report;  
         $this->reference_id = $reference_id;
         $this->alasan = $alasan;
-        $this->status = 'Reported';
+        $this->status = 'reported';
         $this->createdAt = date("Y-m-d H:i:s");
 
     }
