@@ -88,9 +88,22 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                 <p class="text-sm text-gray-500">Stok: <?= $product['stok'] ?></p>
             </div>
 
-            <img src="../../uploads/profile/<?= $seller['photo'] ?? 'default.png' ?>"
-     class="w-14 h-14 rounded-full border">
+            <!-- SELLER INFO -->
+            <a href="seller_review.php?id=<?= $seller['id'] ?>"
+                class="flex items-center gap-3 mt-4 group w-fit">
 
+                <!-- Foto Seller -->
+                <img src="../../uploads/profile/<?= $seller['photo'] ?? 'default.png' ?>"
+                    class="w-11 h-11 rounded-full border shadow-sm">
+
+                <!-- Nama Seller -->
+                <div>
+                    <p class="font-semibold text-slate-800 group-hover:text-[#1E3A8A]">
+                        <?= $seller['username'] ?>
+                    </p>
+                </div>
+
+            </a>
 
             <!-- BUTTONS -->
             <div class="flex gap-4 mt-6">
