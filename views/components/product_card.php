@@ -16,12 +16,12 @@ $oos_class = $is_oos ? "opacity-60 grayscale cursor-not-allowed" : "hover:-trans
 
             <?php if ($is_oos): ?>
                 <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
-                    <span class="text-white font-bold border-2 border-white px-2 py-1">SOLD</span>
+                    <span class="text-white font-bold border-2 border-white px-2 py-1">SOLD OUT</span>
                 </div>
             <?php endif; ?>
         </div>
 
-        <div class="mt-3">
+        <div class="px-4 py-4">
             <h3 class="font-bold text-slate-800 text-lg truncate"><?= $row['nama_product'] ?></h3>
             <p class="text-sm text-gray-500 mb-1 truncate"><?= $row['description'] ?></p>
             <p class="font-black text-slate-900">Rp <?= number_format($row['harga'], 0, ',', '.') ?></p>

@@ -37,7 +37,7 @@ $grandTotal = 0;
 <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <h1 class="text-3xl font-bold text-[#1E3A8A] mb-8 flex items-center gap-2">
-        <span>🛒</span> Keranjang Belanja
+        Keranjang Belanja
     </h1>
 
     <?php if (empty($_SESSION['cart'])): ?>
@@ -107,9 +107,9 @@ $grandTotal = 0;
                                         </span>
                                     </td>
 
-                                    <td class="p-4 text-center">
+                                    <td class="p-4 text-center align-middle">
                                         <a href="<?= BASE_URL ?>actions/cart_remove.php?id=<?= $id ?>"
-                                            class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition"
+                                            class="inline-flex items-center justify-center text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition"
                                             onclick="return confirm('Hapus barang ini?')">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
