@@ -8,12 +8,15 @@ class Chats
     public $message;
     public $createdAt;
 
-    public function __construct($pengirim_id, $penerima_id, $message)
-    {
-        $this->pengirim_id = $pengirim_id;
-        $this->penerima_id = $penerima_id;
-        $this->message = $message;
-        $this->createdAt = date("Y-m-d H:i:s");
+    // 2. AMBIL HISTORY CHAT (Antara Aku & Dia)
+    public function getConversation($conn, $my_id, $partner_id) {
+        $sql = "SELECT c.*, u.username, u.photo 
+                FROM chat c 
+                JOIN user u ON c.pengirim_id = u.id
+                WHERE (c.pengirim_id = '$my_id' AND c.penerima_id = '$partner_id') 
+                   OR (c.pengirim_id = '$partner_id' AND c.penerima_id = '$my_id')
+                ORDER BY c.createdAt ASC";
+        return mysqli_query($conn, $sql);
     }
 
     // 1. KIRIM PESAN
