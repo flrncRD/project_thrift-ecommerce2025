@@ -84,9 +84,6 @@ $result = mysqli_query($conn, $sql);
                                 </div>
                             </td>
 
-
-
-
                             <!-- Produk -->
                             <td class="p-4">
                                 <div class="flex items-center gap-3">
@@ -106,7 +103,7 @@ $result = mysqli_query($conn, $sql);
 
                             <!-- Harga -->
                             <td class="p-4 font-bold text-[#059669]">
-                                Rp <?= number_format($row['total_harga'], 0, ',', '.') ?>
+                                Rp <?= number_format($row['total_harga'] * $row['qty'], 0, ',', '.') ?>
                             </td>
 
                             <!-- Jenis Pembayaran -->

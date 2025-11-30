@@ -65,5 +65,58 @@ class Products
         $result = mysqli_query($conn, $sql);
         return $result;
     }
+
+    // FUNGSI CARI PRODUK
+    public static function search($conn, $keyword) 
+    {
+        $keyword = "%$keyword%";
+        $sql = "
+            SELECT p.*, u.username, u.photo AS user_photo
+            FROM products p
+            JOIN user u ON p.user_id = u.id
+            WHERE p.status = 'active'
+            AND (p.nama_product LIKE ? OR p.deskripsi LIKE ?)
+            ORDER BY p.createdAt DESC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $keyword, $keyword);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $products = [];
+        while ($row = $result->fetch_assoc()) {
+            $products[] = $row;
+        }
+
+        return $products;
+    }
+
+    //FUNGSI LMIT KATEGORI
+    public function getCategories($conn, $limit = 6) {
+        $sql = "SELECT * FROM kategori LIMIT $limit";
+        return mysqli_query($conn, $sql);
+    }
+
+    //FUNGSI GET BEST PRODUCTS
+    public function getBestProducts($conn, $limit = 8) {
+    $sql = "SELECT p.*, u.kota 
+            FROM product p 
+            JOIN user u ON p.user_id = u.id 
+            WHERE p.status = 'active'
+            ORDER BY p.harga DESC 
+            LIMIT $limit";
+    return mysqli_query($conn, $sql);
+}
+    //FUNGSI GET POPULAR PRODUCTS
+    public function getPopularProducts($conn, $limit = 4) {
+        $sql = "SELECT p.*, u.kota 
+                FROM product p 
+                JOIN user u ON p.user_id = u.id 
+                WHERE p.status = 'active'
+                ORDER BY RAND() 
+                LIMIT $limit";
+        return mysqli_query($conn, $sql);
+    }
 }
 ?>
