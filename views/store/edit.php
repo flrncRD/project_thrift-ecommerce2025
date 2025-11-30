@@ -12,10 +12,17 @@ if (!isset($_GET['id'])) {
 $product_id = $_GET['id'];
 
 $Product = new Products();
+// Ambil data produk yang mau diedit
 $data = $Product->getById($conn, $product_id)->fetch_assoc();
 
-// Ambil kategori
-$kategoriData = mysqli_query($conn, "SELECT * FROM product");
+// Security: Cek apakah produk ini milik user yang sedang login?
+if ($data['user_id'] != $_SESSION['user_id']) {
+    echo "<script>alert('Anda tidak berhak mengedit produk ini!'); window.location='my_products.php';</script>";
+    exit;
+}
+
+// Ambil daftar kategori
+$kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
 ?>
 
 <div class="container mx-auto px-6 py-10 flex justify-center">
@@ -24,7 +31,6 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
 
         <form action="<?= BASE_URL ?>actions/product_edit.php" method="POST" enctype="multipart/form-data">
 
-            <!-- ID HIDDEN -->
             <input type="hidden" name="product_id" value="<?= $data['id'] ?>">
 
             <div class="mb-4">
@@ -41,8 +47,7 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
                         <option value="">Pilih Kategori</option>
 
                         <?php while ($k = mysqli_fetch_assoc($kategoriData)): ?>
-                            <option value="<?= $k['id'] ?>"
-                                <?= $k['id'] == $data['kategori_id'] ? 'selected' : '' ?>>
+                            <option value="<?= $k['id'] ?>" <?= $k['id'] == $data['kategori_id'] ? 'selected' : '' ?>>
                                 <?= $k['nama_kategori'] ?>
                             </option>
                         <?php endwhile; ?>
@@ -51,7 +56,7 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
 
                 <div>
                     <label class="block text-gray-700 font-bold mb-2">Harga (Rp)</label>
-                    <input type="number" name="harga" value="<?= $data['harga'] ?>" required
+                    <input type="number" name="harga" value="<?= $data['harga'] ?>" required min="1000"
                         class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
                 </div>
             </div>
@@ -59,7 +64,7 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-gray-700 font-bold mb-2">Stok</label>
-                    <input type="number" name="stok" value="<?= $data['stok'] ?>" required
+                    <input type="number" name="stok" value="<?= $data['stok'] ?>" required min="0"
                         class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
                 </div>
 
@@ -83,12 +88,31 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM product");
 
                 <button type="submit"
                     class="flex-1 bg-[#1E3A8A] text-white font-bold py-2 px-4 rounded hover:bg-blue-900 transition">
-                    UPDATE
+                    SIMPAN PERUBAHAN
                 </button>
             </div>
 
         </form>
     </div>
 </div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function (e) {
+        let harga = document.querySelector("input[name='harga']").value;
+        let stok = document.querySelector("input[name='stok']").value;
+
+        if (parseInt(harga) < 1000) {
+            alert("Harga minimal adalah Rp 1.000");
+            e.preventDefault();
+            return; // Stop
+        }
+
+        if (parseInt(stok) < 0) {
+            alert("Stok tidak boleh negatif!");
+            e.preventDefault();
+            return;
+        }
+    });
+</script>
 
 <?php include '../../views/layouts/footer.php'; ?>
