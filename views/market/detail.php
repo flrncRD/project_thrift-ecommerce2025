@@ -103,7 +103,7 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                 </a>
 
                 <!-- CHAT BUTTON -->
-                <a href="chat.php?user_id=<?= $product['user_id'] ?>"
+                <a href="<?= BASE_URL ?>views/user/chat_room.php?partner_id=<?= $product['user_id'] ?>"
                     class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-bold px-6 py-3 rounded-xl shadow-md transition">
                     Chat Seller
                 </a>

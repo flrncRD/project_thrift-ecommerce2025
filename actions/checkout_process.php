@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/transaksi.php';
+include 'sweet_alert.php';
 
 //Pastikan user sudah login
 if (!isset($_SESSION['user_id'])) {
@@ -40,15 +41,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         // Insert ke database
-        if ($transaksi->insert($conn)) {
-            header("Location: ../../market/history.php");
-            exit;
-        } else {
-            echo "Terjadi kesalahan saat memproses transaksi.";
-        }
+        // if ($transaksi->insert($conn)) {
+            // header("Location: ../../market/history.php");
+            // exit;
+        // } else {
+            // echo "Terjadi kesalahan saat memproses transaksi.";
+        // }
+
+        // JIKA SUKSES (Bagian Commit)
+        mysqli_commit($conn);
+        unset($_SESSION['cart']);
+
+        // GANTI ALERT SUKSES
+        showSweetAlert('success', 'Pesanan Dibuat!', 'Terima kasih telah berbelanja.', BASE_URL . 'views/transaction/history.php');
 
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        // echo "Error: " . $e->getMessage();
+        mysqli_rollback($conn);
+        showSweetAlert('error', 'Gagal Checkout', $e->getMessage(), '../views/transaction/cart.php');
     }
 }
 
