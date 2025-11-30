@@ -118,5 +118,80 @@ class Products
                 LIMIT $limit";
         return mysqli_query($conn, $sql);
     }
+    // 1. HITUNG TOTAL DATA (Untuk Pagination Seller)
+    public function countByUser($conn, $user_id)
+    {
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM product WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        return $row['total'];
+    }
+
+    // 2. AMBIL DATA PER USER DENGAN LIMIT (Pagination Seller)
+    public function getByUserPaginated($conn, $user_id, $start, $limit)
+    {
+        $sql = "SELECT p.*, k.nama_kategori 
+                FROM product p 
+                JOIN kategori k ON p.kategori_id = k.id 
+                WHERE p.user_id = ? 
+                ORDER BY p.createdAt DESC 
+                LIMIT ?, ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iii", $user_id, $start, $limit);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    // 3. HITUNG TOTAL (Support Multi Kategori)
+    public function countSearch($conn, $keyword, $kategori_ids = [])
+    {
+        $key = "%" . $keyword . "%";
+        $sql = "SELECT COUNT(*) as total FROM product WHERE status = 'active' AND nama_product LIKE ?";
+
+        // Logic Multi Filter: Menggunakan SQL 'IN'
+        if (!empty($kategori_ids)) {
+            // Ubah array [1, 2] menjadi string "1,2"
+            // Pastikan isinya integer biar aman (Sanitization)
+            $ids = implode(',', array_map('intval', (array) $kategori_ids));
+            if (!empty($ids)) {
+                $sql .= " AND kategori_id IN ($ids)";
+            }
+        }
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $key);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc()['total'];
+    }
+
+    // 4. CARI BARANG (Support Multi Kategori)
+    public function searchProducts($conn, $keyword, $start, $limit, $kategori_ids = [])
+    {
+        $key = "%" . $keyword . "%";
+
+        $sql = "SELECT p.*, u.username, u.kota, k.nama_kategori 
+                FROM product p 
+                JOIN user u ON p.user_id = u.id 
+                JOIN kategori k ON p.kategori_id = k.id
+                WHERE p.status = 'active' AND p.nama_product LIKE ?";
+
+        // Logic Multi Filter
+        if (!empty($kategori_ids)) {
+            $ids = implode(',', array_map('intval', (array) $kategori_ids));
+            if (!empty($ids)) {
+                $sql .= " AND p.kategori_id IN ($ids)";
+            }
+        }
+
+        // Sorting
+        $sql .= " ORDER BY (p.stok = 0) ASC, p.createdAt DESC LIMIT ?, ?";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sii", $key, $start, $limit);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
 }
 ?>
