@@ -1,4 +1,4 @@
-<?php
+<!-- <?php
 include '../../config/conn.php';
 include '../../views/layouts/header.php';
 
@@ -171,4 +171,4 @@ $grandTotal = 0;
 
 </div>
 
-<?php include '../../views/layouts/footer.php'; ?>
+<?php include '../../views/layouts/footer.php'; ?> -->

@@ -35,7 +35,7 @@
             <form action="<?= BASE_URL ?>actions/auth_login.php" method="POST">
 
                 <div class="mb-5">
-                    <label class="block text-gray-700 text-sm font-semibold mb-2">Username / Email</label>
+                    <label class="block text-gray-700 text-sm font-semibold mb-2">Username</label>
                     <input type="text" name="username" placeholder="Enter your username" required
                         class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition text-gray-900">
                 </div>

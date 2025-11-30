@@ -156,6 +156,7 @@ function isActive($page)
                     class="text-sm font-bold text-white text-center group-hover:text-[#FACC15] transition leading-tight">Riwayat</span>
             </a>
 
+
             <a href="<?= BASE_URL ?>views/user/profile.php"
                 class="mt-auto mb-8 flex flex-col items-center gap-2 group w-full px-2">
                 <div class="p-3 rounded-2xl transition-all duration-200 <?= isActive('profile.php') ?>">

@@ -69,11 +69,13 @@
                     <div>
                         <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">City</label>
                         <input type="text" name="txtkota" placeholder="Surabaya" required
+                            pattern="[A-Za-z\s]+"
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition text-gray-900 text-sm">
                     </div>
                     <div>
                         <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Phone</label>
                         <input type="text" name="txtphone" placeholder="0812..." required
+                            pattern="[0-9] {10,15}"
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition text-gray-900 text-sm">
                     </div>
                 </div>
