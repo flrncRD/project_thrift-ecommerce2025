@@ -1,13 +1,12 @@
 <?php
-class Chats {
-    
-    // 1. KIRIM PESAN
-    public function insert($conn, $pengirim_id, $penerima_id, $message) {
-        $msg = mysqli_real_escape_string($conn, $message);
-        $sql = "INSERT INTO chat (pengirim_id, penerima_id, message, createdAt) 
-                VALUES ('$pengirim_id', '$penerima_id', '$msg', NOW())";
-        return mysqli_query($conn, $sql);
-    }
+
+
+class Chats
+{
+    public $pengirim_id;
+    public $penerima_id;
+    public $message;
+    public $createdAt;
 
     // 2. AMBIL HISTORY CHAT (Antara Aku & Dia)
     public function getConversation($conn, $my_id, $partner_id) {
@@ -20,13 +19,35 @@ class Chats {
         return mysqli_query($conn, $sql);
     }
 
+    // 1. KIRIM PESAN
+    public function insert($conn, $pengirim_id, $penerima_id, $message)
+    {
+        $msg = mysqli_real_escape_string($conn, $message);
+        $sql = "INSERT INTO chat (pengirim_id, penerima_id, message, createdAt) 
+                VALUES ('$pengirim_id', '$penerima_id', '$msg', NOW())";
+        return mysqli_query($conn, $sql);
+    }
+
+    // 2. AMBIL HISTORY CHAT (Antara Aku & Dia)
+    public function getConversation($conn, $my_id, $partner_id)
+    {
+        $sql = "SELECT c.*, u.username, u.photo 
+                FROM chat c 
+                JOIN user u ON c.pengirim_id = u.id
+                WHERE (c.pengirim_id = '$my_id' AND c.penerima_id = '$partner_id') 
+                   OR (c.pengirim_id = '$partner_id' AND c.penerima_id = '$my_id')
+                ORDER BY c.createdAt ASC";
+        return mysqli_query($conn, $sql);
+    }
+
     // 3. AMBIL DAFTAR CHAT (LENGKAP DENGAN LAST MESSAGE & UNREAD)
-    public function getChatList($conn, $my_id) {
+    public function getChatList($conn, $my_id)
+    {
         // Query ini menggunakan Subquery untuk mendapatkan detail pesan terakhir & unread count
         // 1. Ambil pesan terakhir antara aku dan dia (last_message)
         // 2. Ambil waktu pesan terakhir (last_time) untuk sorting
         // 3. Hitung jumlah pesan yang dikirim DIA ke AKU dan belum dibaca (unread)
-        
+
         $sql = "SELECT 
                     u.id, 
                     u.username, 
@@ -54,4 +75,3 @@ class Chats {
         return mysqli_query($conn, $sql);
     }
 }
-?>

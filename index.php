@@ -7,15 +7,15 @@ include 'classes/products.php';
 $productObj = new Products();
 
 // 1. Ambil Data Kategori (Untuk Section Categories)
-$kategoriQuery = mysqli_query($conn, "SELECT * FROM kategori LIMIT 6");
+$kategoriQuery = $productObj->getCategories($conn);
 
 // 2. Ambil Produk "Best Quality" (Kita asumsikan barang termahal/terbaru)
 // Limit 8 barang
-$bestProducts = mysqli_query($conn, "SELECT p.*, u.kota FROM product p JOIN user u ON p.user_id = u.id WHERE p.status = 'active' ORDER BY p.harga DESC LIMIT 8");
+$bestProducts = $productObj->getBestProducts($conn);
 
 // 3. Ambil Produk "Popular" (Kita asumsikan barang Random)
 // Limit 4 barang
-$popProducts = mysqli_query($conn, "SELECT p.*, u.kota FROM product p JOIN user u ON p.user_id = u.id WHERE p.status = 'active' ORDER BY RAND() LIMIT 4");
+$popProducts  = $productObj->getPopularProducts($conn);
 ?>
 
 <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
