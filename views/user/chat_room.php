@@ -128,6 +128,6 @@ if (!$partner) die("User tidak ditemukan.");
     });
 
     fetchMessages();
-    markChatRead();
     setInterval(fetchMessages, 2000);
+    markChatRead();
 </script>

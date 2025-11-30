@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/transaksi.php';
+include 'sweet_alert.php';
 
 //Pastikan user sudah login
 if (!isset($_SESSION['user_id'])) {
@@ -66,10 +67,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $updateStok->bind_param("iii", $qty, $qty, $product_id);
             $updateStok->execute();
-        } else {
-            echo "Terjadi kesalahan saat memproses transaksi.";
-        }
+            
+            // GANTI ALERT SUKSES
+            showSweetAlert('success', 'Pesanan Dibuat!', 'Terima kasih telah berbelanja.', BASE_URL . 'views/transaction/history.php');
+        } 
+//       kalau error disini di un comment aja, soalnya tadi conflict
+//       else {
+//             echo "Terjadi kesalahan saat memproses transaksi.";
+//         }
+      
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        // echo "Error: " . $e->getMessage();
+        mysqli_rollback($conn);
+        showSweetAlert('error', 'Gagal Checkout', $e->getMessage(), '../views/transaction/cart.php');
     }
 }

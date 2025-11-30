@@ -1,10 +1,11 @@
 <?php
 session_start();
 include '../config/conn.php';
+include 'sweet_alert.php';
 
 // Cek Login
 if (!isset($_SESSION['user_id'])) {
-    echo "<script>alert('Silakan login untuk belanja!'); window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
+    showSweetAlert('info', 'Akses Ditolak', 'Silakan login terlebih dahulu untuk belanja.', BASE_URL . 'views/auth/login.php');
     exit();
 }
 
@@ -39,9 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ];
     }
 
-    echo "<script>
-            alert('Berhasil masuk keranjang!'); 
-            window.location.href = '" . BASE_URL . "views/transaction/cart.php';
-          </script>";
+    showSweetAlert('success', 'Berhasil!', 'Barang masuk ke keranjang.', BASE_URL . 'views/transaction/cart.php');
 }
 ?>
