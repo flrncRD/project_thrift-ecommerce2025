@@ -36,6 +36,14 @@ class Users
         $kota = $data['txtkota'];
         $phone = $data['txtphone'];
 
+        if (!preg_match("/^[a-zA-Z\s]+$/", $kota)) {
+            throw new Exception("City can only contain letters and spaces!");
+        }
+
+        if (!preg_match("/^[0-9]{10,15}$/", $phone)) {
+            throw new Exception("Phone number must be between 10 to 15 digits!");
+        }
+
         // Upload Foto
         $photoName = time() . '_' . $files['txtprofile']['name']; // Kasih time biar unik
         move_uploaded_file($files['txtprofile']['tmp_name'], "../uploads/profile/" . $photoName);

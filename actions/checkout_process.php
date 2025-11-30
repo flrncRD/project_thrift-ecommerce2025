@@ -25,6 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
 
+        //Validasi stok
+        $stmt = $conn->prepare("SELECT stok FROM product WHERE id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            throw new Exception("Produk tidak ditemukan.");
+        }
+
+        $product = $result->fetch_assoc();
+        $stokTersedia = $product['stok'];
+
+        if ($qty > $stokTersedia) {
+            throw new Exception("Stok tidak mencukupi. Stok tersedia: " . $stokTersedia);
+        }
+
         // Buat objek transaksi
         $transaksi = new Transaksi(
             $buyer_id,
@@ -41,25 +58,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         // Insert ke database
-        // if ($transaksi->insert($conn)) {
-            // header("Location: ../../market/history.php");
-            // exit;
-        // } else {
-            // echo "Terjadi kesalahan saat memproses transaksi.";
-        // }
+        if ($transaksi->insert($conn)) {
 
-        // JIKA SUKSES (Bagian Commit)
-        mysqli_commit($conn);
-        unset($_SESSION['cart']);
+            // Kurangi stok produk & ubah status jika habis
+            $updateStok = $conn->prepare("UPDATE product SET stok = stok - ?, status = IF(stok - ? <= 0, 'inactive', status)
+            WHERE id = ?
+            ");
 
-        // GANTI ALERT SUKSES
-        showSweetAlert('success', 'Pesanan Dibuat!', 'Terima kasih telah berbelanja.', BASE_URL . 'views/transaction/history.php');
-
+            $updateStok->bind_param("iii", $qty, $qty, $product_id);
+            $updateStok->execute();
+            
+            // GANTI ALERT SUKSES
+            showSweetAlert('success', 'Pesanan Dibuat!', 'Terima kasih telah berbelanja.', BASE_URL . 'views/transaction/history.php');
+        } 
+//       kalau error disini di un comment aja, soalnya tadi conflict
+//       else {
+//             echo "Terjadi kesalahan saat memproses transaksi.";
+//         }
+      
     } catch (Exception $e) {
         // echo "Error: " . $e->getMessage();
         mysqli_rollback($conn);
         showSweetAlert('error', 'Gagal Checkout', $e->getMessage(), '../views/transaction/cart.php');
     }
 }
-
-?>

@@ -14,12 +14,55 @@ class Reviews {
     }
 
     public function insert($conn) {
-        // Insert Review baru ke database
         $sql = "INSERT INTO review (transaksi_id, rating, review, createdAt)
-            VALUES ('$this->transaksi_id', '$this->rating', '$this->review', NOW())";
+                VALUES (?, ?, ?, NOW())";
 
-        return $conn->query($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iis", $this->transaksi_id, $this->rating, $this->review);
+        return $stmt->execute();
     }
+
+    // GET ALL REVIEW SELLER
+    public static function getBySellerId($conn, $seller_id) {
+        $sql = "
+            SELECT r.*,
+                   t.id AS transaksi_id,
+                   p.nama_product,
+                   p.photo AS product_photo,
+                   u.username AS buyer_name,
+                   u.photo AS buyer_photo
+            FROM review r
+            JOIN transaksi t ON r.transaksi_id = t.id
+            JOIN product p ON t.product_id = p.id
+            JOIN user u ON t.buyer_id = u.id
+            WHERE p.user_id = ?
+            ORDER BY r.createdAt DESC
+        ";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $seller_id);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+
+    // GET RATA-RATA SELLER RATING
+    public static function getAverageRating($conn, $seller_id) {
+    $sql = "
+        SELECT AVG(r.rating) AS avg_rating
+        FROM review r
+        JOIN transaksi t ON r.transaksi_id = t.id
+        JOIN product p ON t.product_id = p.id
+        WHERE p.user_id = ?
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $seller_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result()->fetch_assoc();
+    return $result['avg_rating'] ? round($result['avg_rating'], 1) : 0;
 }
 
+}
 ?>

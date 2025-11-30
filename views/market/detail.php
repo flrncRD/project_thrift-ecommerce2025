@@ -88,9 +88,22 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                 <p class="text-sm text-gray-500">Stok: <?= $product['stok'] ?></p>
             </div>
 
-            <img src="../../uploads/profile/<?= $seller['photo'] ?? 'default.png' ?>"
-     class="w-14 h-14 rounded-full border">
+            <!-- SELLER INFO -->
+            <a href="seller_review.php?id=<?= $seller['id'] ?>"
+                class="flex items-center gap-3 mt-4 group w-fit">
 
+                <!-- Foto Seller -->
+                <img src="../../uploads/profile/<?= $seller['photo'] ?? 'default.png' ?>"
+                    class="w-11 h-11 rounded-full border shadow-sm">
+
+                <!-- Nama Seller -->
+                <div>
+                    <p class="font-semibold text-slate-800 group-hover:text-[#1E3A8A]">
+                        <?= $seller['username'] ?>
+                    </p>
+                </div>
+
+            </a>
 
             <!-- BUTTONS -->
             <div class="flex gap-4 mt-6">
@@ -107,6 +120,7 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                     class="bg-[#1E3A8A] hover:bg-[#1E40AF] text-white font-bold px-6 py-3 rounded-xl shadow-md transition">
                     Chat Seller
                 </a>
+
 
             </div>
         </div>
@@ -168,27 +182,29 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
 
                     <div class="mb-4">
                         <label class="text-sm font-semibold">Nama Lengkap</label>
-                        <input type="text" name="nama_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="Nama penerima">
+                        <input type="text" name="nama_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="Nama penerima" required>
                     </div>
 
                     <div class="mb-4">
                         <label class="text-sm font-semibold">Alamat Lengkap</label>
-                        <textarea name="alamat_buyer" class="w-full border p-3 rounded-xl mt-1" rows="3" placeholder="Alamat penerima"></textarea>
+                        <textarea name="alamat_buyer" class="w-full border p-3 rounded-xl mt-1" rows="3" placeholder="Alamat penerima" required></textarea>
                     </div>
 
                     <div class="mb-4">
                         <label class="text-sm font-semibold">Kota</label>
-                        <input type="text" name="kota_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="Kota tujuan">
+                        <input type="text" name="kota_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="Kota tujuan" required
+                        pattern="[A-Za-z\s]+">
                     </div>
 
                     <div class="mb-4">
                         <label class="text-sm font-semibold">No. HP</label>
-                        <input type="text" name="phone_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="089xxxxxxx">
+                        <input type="text" name="phone_buyer" class="w-full border p-3 rounded-xl mt-1" placeholder="089xxxxxxx" required
+                        pattern="[0-9]{10,15}">
                     </div>
 
                     <div class="mb-4">
                         <label class="text-sm font-semibold">Quantity</label>
-                        <input type="number" name="qty" class="w-full border p-3 rounded-xl mt-1" value="1" min="1">
+                        <input type="number" name="qty" class="w-full border p-3 rounded-xl mt-1" value="1" min="1" max="<?= $product['stok'] ?>">
                     </div>
 
                     <div class="mb-6">
@@ -224,9 +240,17 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
 
         $(document).ready(function() {
             let harga = <?= $product['harga'] ?>;
+            let maxstok = <?= $product['stok'] ?>;
+
             $("input[name='qty']").on('input', function() {
                 let qty = parseInt($(this).val()) || 1;
+
+                //min 1
                 if (qty < 1) qty = 1;
+
+                //max stok
+                if (qty > maxstok) qty = maxstok;
+                $(this).val(qty);
                 let grand_total = harga * qty;
                 $("#grand_total_display").text('Rp ' + grand_total.toLocaleString('id-ID'));
             });
@@ -248,6 +272,8 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                 }
             });
         });
+
+
     </script>
 
     <?php include '../layouts/footer.php'; ?>

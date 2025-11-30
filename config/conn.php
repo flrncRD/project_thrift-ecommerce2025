@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";       // User default XAMPP
 $password = "";           // Password default XAMPP (KOSONG)
-$db = "projek-uas-tekweb-25";       // Nama database yang barusan dibuat
+$db = "dbproyek25";       // Nama database yang barusan dibuat
 
 $conn = mysqli_connect($servername, $username, $password, $db);
 
