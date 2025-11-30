@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/users.php';
+include 'sweet_alert.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
@@ -26,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         // Login Gagal
-        echo "<script>alert('Username atau Password Salah!'); window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
+        showSweetAlert('error', 'Login Gagal!', 'Username atau Password Salah.', BASE_URL . 'views/auth/login.php');
     }
 }
 ?>

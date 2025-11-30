@@ -32,7 +32,8 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
                 <div>
                     <label class="block text-gray-700 font-bold mb-2">Harga (Rp)</label>
                     <input type="number" name="harga" required
-                        class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none">
+                        class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-[#FACC15] outline-none"
+                        min="1000"> <!--min harga 1000 spy gabisa minus -->
                 </div>
             </div>
 
@@ -66,5 +67,17 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
         </form>
     </div>
 </div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function (e) {
+    let harga = document.querySelector("input[name='harga']").value;
+
+    if (parseInt(harga) < 1000) {
+        alert("Harga minimal adalah Rp 1.000");
+        e.preventDefault();
+    }
+});
+
+</script>
 
 <?php include '../../views/layouts/footer.php'; ?>

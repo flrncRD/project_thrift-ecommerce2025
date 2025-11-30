@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/users.php';
+include 'sweet_alert.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -12,11 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // 2. Cek apakah username sudah dipakai? (Validasi Sederhana)
     $check = mysqli_query($conn, "SELECT * FROM user WHERE username = '$username'");
     if (mysqli_num_rows($check) > 0) {
-        echo "<script>
-                alert('Username sudah digunakan! Ganti yang lain.');
-                window.location.href = '" . BASE_URL . "views/auth/register.php';
-              </script>";
-        exit();
+        showSweetAlert('warning', 'Username Terpakai', 'Silakan pilih username lain.', BASE_URL . 'views/auth/register.php');
     }
 
     // 3. Panggil Class Users untuk simpan data
@@ -25,12 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $userObj->register($conn, $_POST, $_FILES);
 
     if ($result) {
-        echo "<script>
-                alert('Registrasi Berhasil! Silakan Login.');
-                window.location.href = '" . BASE_URL . "views/auth/login.php';
-              </script>";
+        showSweetAlert('success', 'Registrasi Berhasil!', 'Akun Anda telah dibuat. Silakan Login.', BASE_URL . 'views/auth/login.php');
     } else {
-        echo "Terjadi kesalahan sistem: " . mysqli_error($conn);
+        showSweetAlert('error', 'Terjadi Kesalahan', 'Gagal mendaftar: ' . mysqli_error($conn), BASE_URL . 'views/auth/register.php');
     }
 }
 ?>
