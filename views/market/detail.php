@@ -122,7 +122,7 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
 
                         <div>
                             <label class="flex items-center gap-3 mb-4 cursor-pointer">
-                                <input type="radio" name="jenis_pembayaran" value="transfer"
+                                <input type="radio" name="jenis_pembayaran" value="BCA"
                                     class="w-5 h-5 text-green-600" required>
                                 <div>
                                     <p class="font-semibold">BCA Transfer</p>

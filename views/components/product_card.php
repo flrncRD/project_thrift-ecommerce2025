@@ -7,7 +7,7 @@ $oos_class = $is_oos ? "opacity-60 grayscale cursor-not-allowed" : "hover:-trans
 <div class="bg-white rounded-none md:rounded-lg overflow-hidden group transition duration-300 <?= $oos_class ?>">
 
     <?php if (!$is_oos): ?>
-        <a href="../../views/market/detail.php?id=<?= $row['id'] ?>" class="block">
+        <a href="<?= BASE_URL ?>views/market/detail.php?id=<?= $row['id'] ?>" class="block">
         <?php endif; ?>
 
         <div class="aspect-square bg-gray-300 w-full overflow-hidden relative">

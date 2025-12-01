@@ -15,7 +15,7 @@ $bestProducts = $productObj->getBestProducts($conn);
 
 // 3. Ambil Produk "Popular" (Kita asumsikan barang Random)
 // Limit 4 barang
-$popProducts  = $productObj->getPopularProducts($conn);
+$popProducts = $productObj->getPopularProducts($conn);
 ?>
 
 <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -40,30 +40,32 @@ $popProducts  = $productObj->getPopularProducts($conn);
                     this.activeSlide = (this.activeSlide === this.slides.length - 1) ? 0 : this.activeSlide + 1;
                 }, 5000); // Bergerak setiap 5000ms (5 detik)
             }
-        }" 
-        x-init="loop()" 
-        class="relative w-full rounded-xl overflow-hidden shadow-lg mb-10 group h-64 md:h-[400px]">
+        }" x-init="loop()" class="relative w-full rounded-xl overflow-hidden shadow-lg mb-10 group h-64 md:h-[400px]">
 
         <div class="absolute inset-0 flex transition-transform duration-700 ease-in-out h-full"
-             :style="'transform: translateX(-' + (activeSlide * 100) + '%)'">
-            
+            :style="'transform: translateX(-' + (activeSlide * 100) + '%)'">
+
             <template x-for="slide in slides" :key="slide">
                 <div class="min-w-full h-full relative">
                     <img :src="slide" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 </div>
             </template>
-        
+
         </div>
 
         <button @click="activeSlide = activeSlide === 0 ? slides.length - 1 : activeSlide - 1"
             class="absolute top-1/2 left-4 -translate-y-1/2 bg-white/30 hover:bg-white text-white hover:text-[#1E3A8A] p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
         </button>
 
         <button @click="activeSlide = activeSlide === slides.length - 1 ? 0 : activeSlide + 1"
             class="absolute top-1/2 right-4 -translate-y-1/2 bg-white/30 hover:bg-white text-white hover:text-[#1E3A8A] p-2 rounded-full backdrop-blur-sm transition opacity-0 group-hover:opacity-100">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
         </button>
 
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
@@ -77,7 +79,7 @@ $popProducts  = $productObj->getPopularProducts($conn);
 
     </div>
 
-<!-- ### Penjelasan Perubahan:
+    <!-- ### Penjelasan Perubahan:
 
 1.  **Alpine JS (`x-data`)**:
     * `slides`: Array yang berisi link gambar (saya pakai gambar dari Unsplash sebagai contoh). Kamu bisa menggantinya dengan path gambar lokal nanti.

@@ -3,7 +3,6 @@ session_start();
 include '../config/conn.php';
 include '../classes/transaksi.php';
 
-// Cek Login
 if (!isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "views/auth/login.php");
     exit;
@@ -13,12 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $buyer_id = $_SESSION['user_id'];
     $product_id = $_POST['product_id'];
-
-    // Hitung Total (Satuan x Qty)
-    $harga_satuan = $_POST['harga'];
+    $harga = $_POST['harga'];
     $qty = $_POST['qty'];
-    $total_fix = $harga_satuan * $qty;
-
     $nama_buyer = $_POST['nama_buyer'];
     $alamat_buyer = $_POST['alamat_buyer'];
     $kota_buyer = $_POST['kota_buyer'];
@@ -27,10 +22,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jenis_pengiriman = $_POST['jenis_pengiriman'];
 
     try {
+
+        $stmt = $conn->prepare("SELECT stok FROM product WHERE id = ?");
+        $stmt->bind_param("i", $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 0) {
+            throw new Exception("Produk tidak ditemukan.");
+        }
+
+        $product = $result->fetch_assoc();
+        $stokTersedia = $product['stok'];
+
+        if ($qty > $stokTersedia) {
+            throw new Exception("Stok tidak mencukupi. Stok tersedia: " . $stokTersedia);
+        }
+
         $transaksi = new Transaksi(
             $buyer_id,
             $product_id,
-            $total_fix,
+            $harga,
             $qty,
             $nama_buyer,
             $alamat_buyer,
@@ -42,14 +54,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
         if ($transaksi->insert($conn)) {
-            echo "<script>alert('Transaksi Berhasil!'); window.location.href='" . BASE_URL . "views/transaction/history.php';</script>";
+
+            // update stok produk
+            $updateStok = $conn->prepare("UPDATE product SET stok = stok - ?, status = IF(stok - ? <= 0, 'inactive', status)
+            WHERE id = ?
+            ");
+
+            $updateStok->bind_param("iii", $qty, $qty, $product_id);
+            $updateStok->execute();
+
+            echo "<script>alert('Transaksi Berhasil! Stok barang telah diperbarui.'); window.location.href='" . BASE_URL . "views/transaction/history.php';</script>";
             exit;
         } else {
             echo "Terjadi kesalahan saat memproses transaksi.";
         }
-
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();
     }
 }
-?>
