@@ -98,7 +98,7 @@ $userData = mysqli_fetch_assoc($query);
                     <div class="flex justify-end">
                         <button type="submit" name="update_profile" 
                             class="bg-[#1E3A8A] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg flex items-center gap-2">
-                            <span>💾</span> Simpan Perubahan
+                            <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
                         </button>
                     </div>
                 </form>
@@ -106,7 +106,7 @@ $userData = mysqli_fetch_assoc($query);
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
                 <h3 class="text-xl font-bold text-red-600 mb-6 border-b pb-2 flex items-center gap-2">
-                    <span>🔒</span> Ganti Password
+                    Ganti Password
                 </h3>
 
                 <form action="<?= BASE_URL ?>actions/user_profile_update.php" method="POST">

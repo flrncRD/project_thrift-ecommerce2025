@@ -61,11 +61,11 @@ $is_seller = ($data['seller_id'] == $user_id);
                 <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
                     <?php
                     $width = '0%';
-                    if ($data['status'] == 'Terbayar' || $data['status'] == 'Packing')
-                        $width = '33%';
-                    if ($data['status'] == 'Kirim')
-                        $width = '66%';
-                    if ($data['status'] == 'Selesai')
+                    if ($data['status'] == 'terbayar' || $data['status'] == 'packing')
+                        $width = '25%';
+                    if ($data['status'] == 'kirim')
+                        $width = '50%';
+                    if ($data['status'] == 'selesai')
                         $width = '100%';
                     ?>
                     <div class="bg-[#059669] h-2.5 rounded-full transition-all duration-500"

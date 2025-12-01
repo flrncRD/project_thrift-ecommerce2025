@@ -92,7 +92,7 @@ $popProducts  = $productObj->getPopularProducts($conn);
 
 Silakan simpan dan refresh halaman index kamu. Banner Hero Section sekarang sudah berubah menjadi slideshow gambar yang bergerak! -->
 
-    <!-- <div class="mb-12">
+    <div class="mb-12">
         <h2 class="text-2xl font-bold text-slate-800 mb-6">Categories</h2>
         <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
             <?php while ($kat = mysqli_fetch_assoc($kategoriQuery)): ?>
@@ -107,7 +107,7 @@ Silakan simpan dan refresh halaman index kamu. Banner Hero Section sekarang suda
                 </a>
             <?php endwhile; ?>
         </div>
-    </div> -->
+    </div>
 
     <div class="mb-12">
         <h2 class="text-2xl font-bold text-slate-800 mb-6">Best Second Hand Quality</h2>
