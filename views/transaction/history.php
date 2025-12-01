@@ -103,7 +103,11 @@ $result = mysqli_query($conn, $sql);
 
                             <!-- Harga -->
                             <td class="p-4 font-bold text-[#059669]">
-                                Rp <?= number_format($row['total_harga'] * $row['qty'], 0, ',', '.') ?>
+                                <?php
+                                // Ambil langsung karena di DB sudah tersimpan Total
+                                $nilai_total = isset($row['total_harga']) ? $row['total_harga'] : $row['harga'];
+                                ?>
+                                Rp <?= number_format($nilai_total, 0, ',', '.') ?>
                             </td>
 
                             <!-- Jenis Pembayaran -->

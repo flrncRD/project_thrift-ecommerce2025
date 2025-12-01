@@ -84,13 +84,15 @@ $is_seller = ($data['seller_id'] == $user_id);
                         <h4 class="font-bold text-lg text-slate-800"><?= $data['nama_product'] ?></h4>
                         
                         <?php 
-                            // PERBAIKAN LOGIKA HARGA
-                            // Ambil harga dari kolom 'total_harga' (karena di DB kamu isinya harga satuan)
-                            $harga_satuan = $data['total_harga']; 
+                            // REVISI LOGIKA HARGA
+                            // Ambil Total Harga Langsung dari Database (Karena sudah benar)
+                            // Kolom di DB bisa bernama 'total_harga' atau 'harga', sesuaikan
+                            $total_fix = isset($data['total_harga']) ? $data['total_harga'] : $data['harga'];
+                            
                             $qty = $data['qty'];
                             
-                            // Hitung Total Sebenarnya
-                            $real_total = $harga_satuan * $qty;
+                            // Hitung Harga Satuan (Total / Qty)
+                            $harga_satuan = $total_fix / $qty; 
                         ?>
 
                         <p class="text-gray-500 text-sm">
@@ -98,7 +100,7 @@ $is_seller = ($data['seller_id'] == $user_id);
                         </p>
                         
                         <p class="text-[#059669] font-bold mt-1 text-lg">
-                            Total: Rp <?= number_format($real_total, 0, ',', '.') ?>
+                            Total: Rp <?= number_format($total_fix, 0, ',', '.') ?>
                         </p>
                     </div>
                 </div>
