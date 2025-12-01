@@ -179,7 +179,7 @@ $result = mysqli_query($conn, $sql);
                                     <?php else: ?>
 
                                         <!-- STATUS LAINNYA → HANYA DETAIL -->
-                                        <a href="detail.php?id=<?= $row['id'] ?>" class="text-blue-700 underline">Detail</a>
+                                        <a href="invoice.php?id=<?= $row['id'] ?>" class="text-blue-700 underline">Detail</a>
 
                                     <?php endif; ?>
 
