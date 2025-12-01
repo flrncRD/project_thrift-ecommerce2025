@@ -8,17 +8,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Panggil Class Users
+    // Cek User
     $userObj = new Users();
     $userData = $userObj->login($conn, $username, $password);
 
     if ($userData) {
-        // Simpan Session
+        // Set Session
         $_SESSION['username'] = $userData['username'];
         $_SESSION['role'] = $userData['role'];
         $_SESSION['user_id'] = $userData['id'];
 
-        // Redirect Sesuai Role
+        // Redirect
         if ($userData['role'] == 'admin') {
             header("Location: " . BASE_URL . "views/admin/dashboard.php");
         } else {
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         exit();
     } else {
-        // Login Gagal
+        // Gagal
         showSweetAlert('error', 'Login Gagal!', 'Username atau Password Salah.', BASE_URL . 'views/auth/login.php');
     }
 }

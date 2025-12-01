@@ -1,20 +1,16 @@
-/* PINDAHAND OFFICIAL PALETTE */
+/* PINDAHAND PALETTE */
 :root {
     --color-navy: #1E3A8A;
-    /* Trust */
     --color-emerald: #059669;
-    /* Nature */
     --color-yellow: #FACC15;
-    /* Joy */
     --bg-slate: #F8FAFC;
 }
 
-/* Utility Khusus untuk Barang Habis (OOS) */
+/* Utility Barang Habis (OOS) */
 .card-oos {
     opacity: 0.6;
     filter: grayscale(100%);
     pointer-events: none;
-    /* Tidak bisa diklik */
 }
 
 .card-oos::after {

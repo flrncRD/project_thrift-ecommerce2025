@@ -1,19 +1,22 @@
 <?php
 
-class Reviews {
+class Reviews
+{
     public $transaksi_id;
     public $rating;
     public $review;
     public $createdAt;
 
-    public function __construct($transaksi_id, $rating, $review) {
+    public function __construct($transaksi_id, $rating, $review)
+    {
         $this->transaksi_id = $transaksi_id;
         $this->rating = $rating;
         $this->review = $review;
         $this->createdAt = date("Y-m-d H:i:s");
     }
 
-    public function insert($conn) {
+    public function insert($conn)
+    {
         $sql = "INSERT INTO review (transaksi_id, rating, review, createdAt)
                 VALUES (?, ?, ?, NOW())";
 
@@ -22,8 +25,9 @@ class Reviews {
         return $stmt->execute();
     }
 
-    // GET ALL REVIEW SELLER
-    public static function getBySellerId($conn, $seller_id) {
+    // Ambil Review Seller
+    public static function getBySellerId($conn, $seller_id)
+    {
         $sql = "
             SELECT r.*,
                    t.id AS transaksi_id,
@@ -45,24 +49,23 @@ class Reviews {
         return $stmt->get_result();
     }
 
+    // Hitung Rata-Rata Rating
+    public static function getAverageRating($conn, $seller_id)
+    {
+        $sql = "
+            SELECT AVG(r.rating) AS avg_rating
+            FROM review r
+            JOIN transaksi t ON r.transaksi_id = t.id
+            JOIN product p ON t.product_id = p.id
+            WHERE p.user_id = ?
+        ";
 
-    // GET RATA-RATA SELLER RATING
-    public static function getAverageRating($conn, $seller_id) {
-    $sql = "
-        SELECT AVG(r.rating) AS avg_rating
-        FROM review r
-        JOIN transaksi t ON r.transaksi_id = t.id
-        JOIN product p ON t.product_id = p.id
-        WHERE p.user_id = ?
-    ";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $seller_id);
+        $stmt->execute();
 
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $seller_id);
-    $stmt->execute();
-
-    $result = $stmt->get_result()->fetch_assoc();
-    return $result['avg_rating'] ? round($result['avg_rating'], 1) : 0;
-}
-
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result['avg_rating'] ? round($result['avg_rating'], 1) : 0;
+    }
 }
 ?>
