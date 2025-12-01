@@ -2,6 +2,7 @@
 <script src="<?= BASE_URL ?>assets/js/script.js"></script>
 
 <aside class="w-64 bg-[#0F172A] text-white h-screen fixed top-0 left-0 overflow-y-auto border-r border-gray-800">
+
     <div class="h-16 flex items-center justify-center border-b border-gray-800">
         <h1 class="text-xl font-bold tracking-wider">ADMIN <span class="text-[#059669]">PANEL</span></h1>
     </div>

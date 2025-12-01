@@ -3,7 +3,7 @@ include '../../config/conn.php';
 include '../../views/layouts/header.php';
 include '../../classes/products.php';
 
-// CEK APAKAH ADA ID PRODUK
+// Validasi ID
 if (!isset($_GET['id'])) {
     echo "<script>alert('Produk tidak ditemukan!'); window.location='my_products.php';</script>";
     exit;
@@ -12,16 +12,15 @@ if (!isset($_GET['id'])) {
 $product_id = $_GET['id'];
 
 $Product = new Products();
-// Ambil data produk yang mau diedit
 $data = $Product->getById($conn, $product_id)->fetch_assoc();
 
-// Security: Cek apakah produk ini milik user yang sedang login?
+// Cek Hak Akses
 if ($data['user_id'] != $_SESSION['user_id']) {
     echo "<script>alert('Anda tidak berhak mengedit produk ini!'); window.location='my_products.php';</script>";
     exit;
 }
 
-// Ambil daftar kategori
+// Ambil Kategori
 $kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
 ?>
 
@@ -104,7 +103,7 @@ $kategoriData = mysqli_query($conn, "SELECT * FROM kategori");
         if (parseInt(harga) < 1000) {
             alert("Harga minimal adalah Rp 1.000");
             e.preventDefault();
-            return; // Stop
+            return;
         }
 
         if (parseInt(stok) < 0) {

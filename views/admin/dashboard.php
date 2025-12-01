@@ -2,14 +2,13 @@
 session_start();
 include '../../config/conn.php';
 
-// CEK APAKAH DIA ADMIN? (Security Gate)
-// Jika bukan admin, tendang ke home
+// Cek Admin
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     header("Location: " . BASE_URL . "index.php");
     exit();
 }
 
-// CONTOH DATA DUMMY (Nanti diganti query database beneran)
+// Data Dummy (Untuk Demo)
 $totalUser = 15;
 $totalReport = 3;
 ?>

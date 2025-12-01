@@ -3,6 +3,7 @@ include '../../config/conn.php';
 include '../../views/layouts/header.php';
 include '../../classes/products.php';
 
+// Cek Login
 if (!isset($_SESSION['user_id'])) {
     echo "<script>window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
     exit();
@@ -11,12 +12,12 @@ if (!isset($_SESSION['user_id'])) {
 $productObj = new Products();
 $user_id = $_SESSION['user_id'];
 
-// PAGINATION CONFIG
-$limit = 10; // Tampilkan 10 barang per halaman tabel
+// Pagination
+$limit = 6;
 $pageActive = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($pageActive > 1) ? ($pageActive * $limit) - $limit : 0;
 
-// AMBIL DATA
+// Ambil Data
 $totalData = $productObj->countByUser($conn, $user_id);
 $totalPages = ceil($totalData / $limit);
 $myProducts = $productObj->getByUserPaginated($conn, $user_id, $start, $limit);

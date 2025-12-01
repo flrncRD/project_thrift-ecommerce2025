@@ -8,17 +8,19 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
     exit();
 }
 
-// Hanya Ambil Data
+// Ambil Kategori
 $kategori = mysqli_query($conn, "SELECT * FROM kategori");
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <title>Kelola Kategori - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 font-[Inter]">
 
     <div class="flex">
@@ -30,9 +32,9 @@ $kategori = mysqli_query($conn, "SELECT * FROM kategori");
             <div class="bg-white p-6 rounded-lg shadow mb-8 max-w-lg">
                 <h3 class="font-bold text-lg mb-4 text-[#1E3A8A]">Tambah Kategori Baru</h3>
                 <form action="<?= BASE_URL ?>actions/admin_category.php" method="POST" class="flex gap-4">
-                    <input type="text" name="nama_kategori" placeholder="Contoh: Jaket, Sepatu..." required 
+                    <input type="text" name="nama_kategori" placeholder="Contoh: Jaket, Sepatu..." required
                         class="flex-1 border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-[#059669] outline-none">
-                    <button type="submit" name="add_kategori" 
+                    <button type="submit" name="add_kategori"
                         class="bg-[#059669] text-white px-6 py-2 rounded font-bold hover:bg-emerald-700 transition">
                         + Simpan
                     </button>
@@ -50,17 +52,17 @@ $kategori = mysqli_query($conn, "SELECT * FROM kategori");
                     </thead>
                     <tbody class="text-gray-700">
                         <?php while ($row = mysqli_fetch_assoc($kategori)): ?>
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="p-4 text-center font-mono text-sm"><?= $row['id'] ?></td>
-                            <td class="p-4 font-bold"><?= $row['nama_kategori'] ?></td>
-                            <td class="p-4 text-right">
-                                <a href="<?= BASE_URL ?>actions/admin_category.php?action=delete&id=<?= $row['id'] ?>" 
-                                   onclick="return confirm('Hapus kategori ini?')" 
-                                   class="text-red-500 hover:text-red-700 font-bold text-sm">
-                                   Hapus 🗑️
-                                </a>
-                            </td>
-                        </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="p-4 text-center font-mono text-sm"><?= $row['id'] ?></td>
+                                <td class="p-4 font-bold"><?= $row['nama_kategori'] ?></td>
+                                <td class="p-4 text-right">
+                                    <a href="<?= BASE_URL ?>actions/admin_category.php?action=delete&id=<?= $row['id'] ?>"
+                                        onclick="return confirm('Hapus kategori ini?')"
+                                        class="text-red-500 hover:text-red-700 font-bold text-sm">
+                                        Hapus 🗑️
+                                    </a>
+                                </td>
+                            </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -68,4 +70,5 @@ $kategori = mysqli_query($conn, "SELECT * FROM kategori");
         </main>
     </div>
 </body>
+
 </html>
