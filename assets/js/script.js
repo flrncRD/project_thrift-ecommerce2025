@@ -111,6 +111,25 @@ function toggleSidebar() {
     }
 }
 
+function confirmDelete(event) {
+    event.preventDefault(); // Mencegah link langsung jalan
+    const url = event.currentTarget.getAttribute('href'); // Ambil link tujuan
+
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: "Yakin ingin menghapus produk ini selamanya?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url; // Lanjut ke proses hapus PHP
+        }
+    });
+}
 
 // === FUNGSI LOGOUT GLOBAL ===
 function confirmLogout(event) {

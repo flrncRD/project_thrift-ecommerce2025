@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/products.php';
+include 'sweet_alert.php';
 
 // Pastikan user login
 if (!isset($_SESSION['user_id'])) {
@@ -62,10 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sisdssi", $nama, $kategori, $harga, $stok, $desc, $finalPhoto, $product_id);
 
     if ($stmt->execute()) {
-        echo "<script>
-                alert('Produk berhasil diperbarui!');
-                window.location.href = '" . BASE_URL . "views/store/my_products.php';
-            </script>";
+        showSweetAlert('success', 'Sukses Memperbarui', 'Produk berhasil diperbarui!', BASE_URL . "views/store/my_products.php");
     } else {
         die("Gagal update: " . $stmt->error);
     }

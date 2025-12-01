@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Cek login
 if (!isset($_SESSION['user_id'])) {
-    echo "<script>alert('Silakan login dulu!'); window.location.href='../views/auth/login.php';</script>";
+    showSweetAlert('error', 'Warning', 'Silakan login dulu!', BASE_URL . "views/auth/login.php");
     exit();
 }
 
@@ -20,8 +20,7 @@ $sql = "INSERT INTO report (user_id, jenis_report, reference_id, alasan, status,
         VALUES ('$user_id', '$jenis_report', '$reference_id', '$alasan', 'reported', NOW())";
 
 if (mysqli_query($conn, $sql)) {
-    echo "<script>alert('Laporan berhasil dikirim! Kami akan meninjau laporan Anda'); 
-        </script>";
+    showSweetAlert('success', 'Laporan berhasil dikirim!', 'Kami akan meninjau laporan Anda', BASE_URL . "views/transaction/report_transaction.php");
 } else {
     echo "Error: " . mysqli_error($conn);
 }

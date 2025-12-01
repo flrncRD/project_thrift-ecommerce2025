@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/products.php';
+include 'sweet_alert.php';
 
 // Cek Login
 if (!isset($_SESSION['user_id'])) {
@@ -28,12 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $productObj->insert($conn, $_POST, $_FILES, $_SESSION['user_id']);
 
     if ($result) {
-        echo "<script>
-                alert('Barang berhasil dijual!');
-                window.location.href = '" . BASE_URL . "views/store/my_products.php';
-            </script>";
+        showSweetAlert('success', 'Sukses Membuat', 'Barang berhasil dijual!', BASE_URL . "views/store/my_products.php");
     } else {
-        echo "Gagal upload produk: " . mysqli_error($conn);
+        showSweetAlert('error', 'Error', mysqli_error($conn), BASE_URL . "views/store/my_products.php?id=$id");
+        mysqli_error($conn);
     }
 }
 ?>

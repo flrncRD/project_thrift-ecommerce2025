@@ -28,7 +28,7 @@ if (isset($_GET['id'])) {
         $sql = "DELETE FROM product WHERE id='$id' AND user_id='$user_id'";
 
         if (mysqli_query($conn, $sql)) {
-            echo "<script>alert('Produk berhasil dihapus!'); window.location.href='" . BASE_URL . "views/store/my_products.php';</script>";
+            showSweetAlert('warning', 'Konfirmasi', 'Yakin ingin menghapus produk ini selamanya?', BASE_URL . 'views/store/my_products.php');
         } else {
             echo "<script>alert('Gagal menghapus produk!'); window.location.href='" . BASE_URL . "views/store/my_products.php';</script>";
         }

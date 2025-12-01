@@ -145,7 +145,7 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
 
                         <div>
                             <label class="flex items-center gap-3 mb-4">
-                                <input type="radio" name="jenis_pembayaran" value="BCA" class="w-5 h-5 text-green-600">
+                                <input type="radio" name="jenis_pembayaran" value="transfer" class="w-5 h-5 text-green-600">
                                 <div>
                                     <p class="font-semibold">BCA Transfer</p>
                                     <p class="text-sm text-gray-500">No Rek: 1234567890 (PT PindaHand)</p>
@@ -161,7 +161,7 @@ if ($sellerResult && $sellerResult->num_rows > 0) {
                             </label>
 
                             <label class="flex items-center gap-3 mb-4">
-                                <input type="radio" name="jenis_pembayaran" value="e-wallet" class="w-5 h-5 text-green-600">
+                                <input type="radio" name="jenis_pembayaran" value="ewallet" class="w-5 h-5 text-green-600">
                                 <div>
                                     <p class="font-semibold">E-Wallet (OVO / Dana / Gopay)</p>
                                     <p class="text-sm text-gray-500">No : 081384383020</p>

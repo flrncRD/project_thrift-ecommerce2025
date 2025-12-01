@@ -74,7 +74,7 @@ $myProducts = $productObj->getByUserPaginated($conn, $user_id, $start, $limit);
                                     </a>
 
                                     <a href="<?= BASE_URL ?>actions/product_delete.php?id=<?= $row['id'] ?>"
-                                        onclick="return confirm('Yakin ingin menghapus produk ini selamanya?')"
+                                        onclick="confirmDelete(event)"
                                         class="text-red-500 hover:text-red-700 font-semibold text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition">
                                         Hapus
                                     </a>
