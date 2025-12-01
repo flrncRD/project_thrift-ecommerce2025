@@ -1,14 +1,12 @@
 <?php
-
-
 class Chats
 {
     public $pengirim_id;
     public $penerima_id;
     public $message;
     public $createdAt;
-    
-    // 1. KIRIM PESAN
+
+    // Kirim Pesan
     public function insert($conn, $pengirim_id, $penerima_id, $message)
     {
         $msg = mysqli_real_escape_string($conn, $message);
@@ -17,7 +15,7 @@ class Chats
         return mysqli_query($conn, $sql);
     }
 
-    // 2. AMBIL HISTORY CHAT (Antara Aku & Dia)
+    // Ambil History Chat (2 Arah)
     public function getConversation($conn, $my_id, $partner_id)
     {
         $sql = "SELECT c.*, u.username, u.photo 
@@ -29,14 +27,9 @@ class Chats
         return mysqli_query($conn, $sql);
     }
 
-    // 3. AMBIL DAFTAR CHAT (LENGKAP DENGAN LAST MESSAGE & UNREAD)
+    // Ambil Daftar Chat (Last Message & Unread)
     public function getChatList($conn, $my_id)
     {
-        // Query ini menggunakan Subquery untuk mendapatkan detail pesan terakhir & unread count
-        // 1. Ambil pesan terakhir antara aku dan dia (last_message)
-        // 2. Ambil waktu pesan terakhir (last_time) untuk sorting
-        // 3. Hitung jumlah pesan yang dikirim DIA ke AKU dan belum dibaca (unread)
-
         $sql = "SELECT 
                     u.id, 
                     u.username, 
@@ -64,3 +57,4 @@ class Chats
         return mysqli_query($conn, $sql);
     }
 }
+?>

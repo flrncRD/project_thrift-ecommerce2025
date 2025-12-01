@@ -5,11 +5,11 @@ class Users
     public $email;
     public $password;
 
-    // LOGIN FUNCTION
+    // Login (Cek Username/Email)
     public function login($conn, $username, $password)
     {
         $stmt = $conn->prepare("SELECT * FROM user WHERE username = ? OR email = ?");
-        $stmt->bind_param("ss", $username, $username); // Bisa login pake email/username
+        $stmt->bind_param("ss", $username, $username);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -22,7 +22,7 @@ class Users
         return false;
     }
 
-    // REGISTER FUNCTION (YANG DIPERBAIKI)
+    // Register User Baru
     public function register($conn, $data, $files)
     {
         $username = htmlspecialchars($data['txtusername']);
@@ -36,10 +36,8 @@ class Users
         $photoName = time() . '_' . $files['txtprofile']['name'];
         $tmp = $files['txtprofile']['tmp_name'];
 
-        // Pindahkan file foto
         if (move_uploaded_file($tmp, "../uploads/profile/" . $photoName)) {
 
-            // Query Insert
             $sql = "INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, 'active', 'user', NOW())";
 
@@ -49,10 +47,10 @@ class Users
             return $stmt->execute();
         }
 
-        return false; // Gagal upload
+        return false;
     }
 
-    // GET USER BY ID
+    // Ambil User by ID
     public function getById($conn, $id)
     {
         $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");

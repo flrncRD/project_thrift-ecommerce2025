@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $trx_id = $_POST['trx_id'];
-    $action = $_POST['action']; // 'kirim' atau 'selesai'
+    $action = $_POST['action'];
 
     $status_baru = '';
 

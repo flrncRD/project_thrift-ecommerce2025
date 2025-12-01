@@ -1,6 +1,7 @@
 <?php
 
-class Transaksi {
+class Transaksi
+{
 
     public $buyer_id;
     public $product_id;
@@ -10,15 +11,24 @@ class Transaksi {
     public $alamat_buyer;
     public $kota_buyer;
     public $phone_buyer;
-    public $jenis_pembayaran; // transfer, cod, e-money
-    public $jenis_pengiriman; // jne, lion_parcel, instant
+    public $jenis_pembayaran;
+    public $jenis_pengiriman;
     public $status;
     public $createdAt;
 
-    public function __construct($buyer_id, $product_id, $total_harga, $qty,
-        $nama_buyer, $alamat_buyer, $kota_buyer, $phone_buyer,
-        $jenis_pembayaran, $jenis_pengiriman, $status = 'terbayar') 
-    {
+    public function __construct(
+        $buyer_id,
+        $product_id,
+        $total_harga,
+        $qty,
+        $nama_buyer,
+        $alamat_buyer,
+        $kota_buyer,
+        $phone_buyer,
+        $jenis_pembayaran,
+        $jenis_pengiriman,
+        $status = 'terbayar'
+    ) {
         $this->buyer_id = $buyer_id;
         $this->product_id = $product_id;
         $this->total_harga = $total_harga;
@@ -32,7 +42,7 @@ class Transaksi {
         $this->status = $status;
         $this->createdAt = date("Y-m-d H:i:s");
 
-        // Validasi jenis pembayaran
+        // Validasi
         $allowed_payment = ['transfer', 'cod', 'E-wallet'];
         if (!in_array($this->jenis_pembayaran, $allowed_payment)) {
             throw new Exception("Jenis pembayaran tidak valid");

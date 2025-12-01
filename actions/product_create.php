@@ -10,28 +10,19 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    //Validasi harga
+    // Validasi harga
     $harga = intval($_POST['harga']);
-    
     if ($harga < 1000) {
-        echo "<script>
-                alert('Harga minimal adalah Rp 1000.');
-                window.history.back();
-            </script>";
+        echo "<script>alert('Harga minimal adalah Rp 1000.'); window.history.back();</script>";
         exit;
     }
 
-    
+    // Proses Simpan
     $productObj = new Products();
-
-    // Kirim Data, File, dan ID User yang sedang login
     $result = $productObj->insert($conn, $_POST, $_FILES, $_SESSION['user_id']);
 
     if ($result) {
-        echo "<script>
-                alert('Barang berhasil dijual!');
-                window.location.href = '" . BASE_URL . "views/store/my_products.php';
-            </script>";
+        echo "<script>alert('Barang berhasil dijual!'); window.location.href = '" . BASE_URL . "views/store/my_products.php';</script>";
     } else {
         echo "Gagal upload produk: " . mysqli_error($conn);
     }

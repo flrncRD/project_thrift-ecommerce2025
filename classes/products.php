@@ -1,7 +1,7 @@
 <?php
 class Products
 {
-    // FUNGSI TAMBAH PRODUK
+    // Tambah Produk
     public function insert($conn, $data, $files, $user_id)
     {
         $nama = $data['nama_product'];
@@ -26,7 +26,7 @@ class Products
         return false;
     }
 
-    // FUNGSI AMBIL PRODUK PER USER (Untuk halaman Toko Saya)
+    // Ambil Produk per User
     public function getByUser($conn, $user_id)
     {
         $sql = "SELECT p.*, k.nama_kategori 
@@ -39,7 +39,7 @@ class Products
         return $stmt->get_result();
     }
 
-    // FUNGSI AMBIL PRODUK UNTUK DETAIL PRODUK
+    // Ambil Detail Produk
     public function getById($conn, $id)
     {
         $sql = "SELECT p.*, k.nama_kategori 
@@ -52,11 +52,9 @@ class Products
         return $stmt->get_result();
     }
 
-    // FUNGSI AMBIL SEMUA PRODUK (Untuk Halaman Depan/Home)
+    // Ambil Semua Produk (Sorting OOS)
     public function getAll($conn)
     {
-        // Logika: Barang Habis (stok=0) ditaruh paling belakang (stok = 0 ASC)
-        // Barang ready ditaruh paling atas berdasarkan waktu terbaru
         $sql = "SELECT p.*, u.username, u.kota 
                 FROM product p 
                 JOIN user u ON p.user_id = u.id 
@@ -66,50 +64,28 @@ class Products
         return $result;
     }
 
-    // FUNGSI CARI PRODUK
-    public static function search($conn, $keyword) 
+    // Limit Kategori (Home)
+    public function getCategories($conn, $limit = 6)
     {
-        $keyword = "%$keyword%";
-        $sql = "
-            SELECT p.*, u.username, u.photo AS user_photo
-            FROM products p
-            JOIN user u ON p.user_id = u.id
-            WHERE p.status = 'active'
-            AND (p.nama_product LIKE ? OR p.deskripsi LIKE ?)
-            ORDER BY p.createdAt DESC
-        ";
-
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $keyword, $keyword);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $products = [];
-        while ($row = $result->fetch_assoc()) {
-            $products[] = $row;
-        }
-
-        return $products;
-    }
-
-    //FUNGSI LMIT KATEGORI
-    public function getCategories($conn, $limit = 6) {
         $sql = "SELECT * FROM kategori LIMIT $limit";
         return mysqli_query($conn, $sql);
     }
 
-    //FUNGSI GET BEST PRODUCTS
-    public function getBestProducts($conn, $limit = 8) {
-    $sql = "SELECT p.*, u.kota 
-            FROM product p 
-            JOIN user u ON p.user_id = u.id 
-            WHERE p.status = 'active'
-            ORDER BY p.harga DESC 
-            LIMIT $limit";
-    return mysqli_query($conn, $sql);
-}
-    //FUNGSI GET POPULAR PRODUCTS
-    public function getPopularProducts($conn, $limit = 4) {
+    // Best Products (Harga Tertinggi)
+    public function getBestProducts($conn, $limit = 8)
+    {
+        $sql = "SELECT p.*, u.kota 
+                FROM product p 
+                JOIN user u ON p.user_id = u.id 
+                WHERE p.status = 'active'
+                ORDER BY p.harga DESC 
+                LIMIT $limit";
+        return mysqli_query($conn, $sql);
+    }
+
+    // Popular Products (Random)
+    public function getPopularProducts($conn, $limit = 4)
+    {
         $sql = "SELECT p.*, u.kota 
                 FROM product p 
                 JOIN user u ON p.user_id = u.id 
@@ -118,7 +94,8 @@ class Products
                 LIMIT $limit";
         return mysqli_query($conn, $sql);
     }
-    // 1. HITUNG TOTAL DATA (Untuk Pagination Seller)
+
+    // Hitung Total Data (Pagination Seller)
     public function countByUser($conn, $user_id)
     {
         $stmt = $conn->prepare("SELECT COUNT(*) as total FROM product WHERE user_id = ?");
@@ -128,7 +105,7 @@ class Products
         return $row['total'];
     }
 
-    // 2. AMBIL DATA PER USER DENGAN LIMIT (Pagination Seller)
+    // Ambil Data dengan Limit (Pagination Seller)
     public function getByUserPaginated($conn, $user_id, $start, $limit)
     {
         $sql = "SELECT p.*, k.nama_kategori 
@@ -144,16 +121,13 @@ class Products
         return $stmt->get_result();
     }
 
-    // 3. HITUNG TOTAL (Support Multi Kategori)
+    // Hitung Total Search (Filter Kategori)
     public function countSearch($conn, $keyword, $kategori_ids = [])
     {
         $key = "%" . $keyword . "%";
         $sql = "SELECT COUNT(*) as total FROM product WHERE status = 'active' AND nama_product LIKE ?";
 
-        // Logic Multi Filter: Menggunakan SQL 'IN'
         if (!empty($kategori_ids)) {
-            // Ubah array [1, 2] menjadi string "1,2"
-            // Pastikan isinya integer biar aman (Sanitization)
             $ids = implode(',', array_map('intval', (array) $kategori_ids));
             if (!empty($ids)) {
                 $sql .= " AND kategori_id IN ($ids)";
@@ -166,7 +140,7 @@ class Products
         return $stmt->get_result()->fetch_assoc()['total'];
     }
 
-    // 4. CARI BARANG (Support Multi Kategori)
+    // Cari Barang (Search + Filter + Pagination)
     public function searchProducts($conn, $keyword, $start, $limit, $kategori_ids = [])
     {
         $key = "%" . $keyword . "%";
@@ -177,7 +151,6 @@ class Products
                 JOIN kategori k ON p.kategori_id = k.id
                 WHERE p.status = 'active' AND p.nama_product LIKE ?";
 
-        // Logic Multi Filter
         if (!empty($kategori_ids)) {
             $ids = implode(',', array_map('intval', (array) $kategori_ids));
             if (!empty($ids)) {
@@ -185,7 +158,6 @@ class Products
             }
         }
 
-        // Sorting
         $sql .= " ORDER BY (p.stok = 0) ASC, p.createdAt DESC LIMIT ?, ?";
 
         $stmt = $conn->prepare($sql);
