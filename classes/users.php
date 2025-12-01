@@ -5,62 +5,60 @@ class Users
     public $email;
     public $password;
 
-    // LOGIN FUNCTION (OOP)
+    // LOGIN FUNCTION
     public function login($conn, $username, $password)
     {
-        // 1. Siapkan Query (Cegah SQL Injection)
-        $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
-        $stmt->bind_param("s", $username);
+        $stmt = $conn->prepare("SELECT * FROM user WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username, $username); // Bisa login pake email/username
         $stmt->execute();
         $result = $stmt->get_result();
 
-        // 2. Cek apakah user ada
         if ($result->num_rows === 1) {
             $row = $result->fetch_assoc();
-
-            // 3. Cek Password Hash
             if (password_verify($password, $row['password'])) {
-                return $row; // Login Sukses, kembalikan data user
+                return $row;
             }
         }
-        return false; // Gagal
+        return false;
     }
 
-    // REGISTER FUNCTION (Yang kamu kirim sebelumnya, dirapikan dikit)
+    // REGISTER FUNCTION (YANG DIPERBAIKI)
     public function register($conn, $data, $files)
     {
-        $username = $data['txtusername'];
-        $email = $data['txtemail'];
-        $password = password_hash($data['txtpass'], PASSWORD_DEFAULT); // Hash disini
-        $alamat = $data['txtalamat'];
-        $kota = $data['txtkota'];
-        $phone = $data['txtphone'];
-
-        if (!preg_match("/^[a-zA-Z\s]+$/", $kota)) {
-            throw new Exception("City can only contain letters and spaces!");
-        }
-
-        if (!preg_match("/^[0-9]{10,15}$/", $phone)) {
-            throw new Exception("Phone number must be between 10 to 15 digits!");
-        }
+        $username = htmlspecialchars($data['txtusername']);
+        $email = htmlspecialchars($data['txtemail']);
+        $password = password_hash($data['txtpass'], PASSWORD_DEFAULT);
+        $alamat = htmlspecialchars($data['txtalamat']);
+        $kota = htmlspecialchars($data['txtkota']);
+        $phone = htmlspecialchars($data['txtphone']);
 
         // Upload Foto
-        $photoName = time() . '_' . $files['txtprofile']['name']; // Kasih time biar unik
-        move_uploaded_file($files['txtprofile']['tmp_name'], "../uploads/profile/" . $photoName);
+        $photoName = time() . '_' . $files['txtprofile']['name'];
+        $tmp = $files['txtprofile']['tmp_name'];
 
-        $stmt = $conn->prepare("INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, 'active', 'user', NOW())");
+        // Pindahkan file foto
+        if (move_uploaded_file($tmp, "../uploads/profile/" . $photoName)) {
 
-        $stmt->bind_param("sssssss", $username, $email, $password, $photoName, $alamat, $kota, $phone);
-        return $stmt->execute();
+            // Query Insert
+            $sql = "INSERT INTO user (username, email, password, photo, alamat, kota, phone, status, role, createdAt) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 'active', 'user', NOW())";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssss", $username, $email, $password, $photoName, $alamat, $kota, $phone);
+
+            return $stmt->execute();
+        }
+
+        return false; // Gagal upload
     }
 
-   public function getById($conn, $id)
+    // GET USER BY ID
+    public function getById($conn, $id)
     {
-    $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    return $stmt->get_result();
+        $stmt = $conn->prepare("SELECT * FROM user WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        return $stmt->get_result();
     }
-
 }
 ?>
