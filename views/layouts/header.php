@@ -19,6 +19,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PindaHand - Thrift Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -147,16 +148,22 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                         style="display: none;">
                         <div class="py-2">
                             <a href="<?= BASE_URL ?>views/user/profile.php"
-                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition"><span
-                                    class="w-8 text-xl text-center">👤</span> Profil Saya</a>
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <div class="flex-shrink-0 w-6 text-center mr-4">
+                                    <i class="fa-solid fa-user text-lg"></i>
+                                </div>Profil Saya</a>
                             <a href="<?= BASE_URL ?>views/transaction/history.php"
-                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition"><span
-                                    class="w-8 text-xl text-center">📦</span> Riwayat Pesanan</a>
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <div class="flex-shrink-0 w-6 text-center mr-4">
+                                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                                </div>Riwayat Pesanan</a>
                         </div>
                         <div class="border-t border-gray-200 my-1"></div>
                         <a href="<?= BASE_URL ?>actions/auth_logout.php" onclick="confirmLogout(event)"
-                            class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition"><span
-                                class="w-8 text-xl text-center">🚪</span> Keluar (Logout)</a>
+                            class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition">
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                            </div>Keluar (Logout)</a>
                     </div>
                 </div>
     
@@ -261,11 +268,15 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                     <div class="py-2">
                         <a href="<?= BASE_URL ?>views/user/profile.php"
                             class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
-                            <span class="w-8 text-xl text-center">👤</span> Profil Saya
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-user text-lg"></i>
+                            </div>Profil Saya
                         </a>
                         <a href="<?= BASE_URL ?>views/transaction/history.php"
                             class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
-                            <span class="w-8 text-xl text-center">📦</span> Riwayat Pesanan
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                            </div>Riwayat Pesanan
                         </a>
                     </div>
 
@@ -273,7 +284,9 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
 
                     <a href="<?= BASE_URL ?>actions/auth_logout.php" onclick="confirmLogout(event)"
                         class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition">
-                        <span class="w-8 text-xl text-center">🚪</span> Keluar (Logout)
+                        <div class="flex-shrink-0 w-6 text-center mr-4">
+                            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                        </div>Keluar (Logout)
                     </a>
                 </div>
             </div>
