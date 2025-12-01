@@ -2,7 +2,6 @@
 <script src="<?= BASE_URL ?>assets/js/script.js"></script>
 
 <aside class="w-64 bg-[#0F172A] text-white h-screen fixed top-0 left-0 overflow-y-auto border-r border-gray-800">
-
     <div class="h-16 flex items-center justify-center border-b border-gray-800">
         <h1 class="text-xl font-bold tracking-wider">ADMIN <span class="text-[#059669]">PANEL</span></h1>
     </div>
@@ -12,7 +11,7 @@
 
         <a href="<?= BASE_URL ?>views/admin/dashboard.php"
             class="flex items-center p-3 rounded hover:bg-[#1E3A8A] transition">
-            <span>📊</span>
+            <i class="fa-solid fa-chart-line w-6 text-center text-white"></i>
             <span class="ml-3 font-medium">Dashboard</span>
         </a>
 
@@ -20,19 +19,19 @@
 
         <a href="<?= BASE_URL ?>views/admin/manage_users.php"
             class="flex items-center p-3 rounded hover:bg-[#1E3A8A] transition">
-            <span>👥</span>
+            <i class="fa-solid fa-users w-6 text-center text-white"></i>
             <span class="ml-3 font-medium">Kelola User</span>
         </a>
 
         <a href="<?= BASE_URL ?>views/admin/manage_reports.php"
             class="flex items-center p-3 rounded hover:bg-[#1E3A8A] transition">
-            <span>🚨</span>
+            <i class="fa-solid fa-triangle-exclamation w-6 text-center text-white"></i>
             <span class="ml-3 font-medium">Laporan Masuk</span>
         </a>
 
         <a href="<?= BASE_URL ?>views/admin/manage_kategori.php"
             class="flex items-center p-3 rounded hover:bg-[#1E3A8A] transition">
-            <span>🏷️</span>
+            <i class="fa-solid fa-tags w-6 text-center text-white"></i>
             <span class="ml-3 font-medium">Kategori Produk</span>
         </a>
 
@@ -40,7 +39,7 @@
 
         <a href="<?= BASE_URL ?>actions/auth_logout.php" onclick="confirmLogout(event)"
             class="flex items-center p-3 rounded hover:bg-red-900 text-red-300 transition">
-            <span>🚪</span>
+            <i class="fa-solid fa-right-from-bracket w-6 text-center text-white"></i>
             <span class="ml-3 font-medium">Logout Admin</span>
         </a>
     </nav>

@@ -2,19 +2,38 @@
 session_start();
 include '../config/conn.php';
 
+// 1. Cek Login
 if (!isset($_SESSION['user_id'])) {
-    die("Akses ditolak.");
+    echo "<script>alert('Silakan login!'); window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
+    exit();
 }
 
-$id = $_GET['id'] ?? 0;
+// 2. Cek Parameter ID
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $user_id = $_SESSION['user_id'];
 
-// soft delete
-$sql = "UPDATE product SET status = 'inactive' WHERE id = $id";
+    // 3. Ambil Nama Foto Dulu (Supaya file gambarnya bisa dihapus dari folder)
+    $query = mysqli_query($conn, "SELECT photo FROM product WHERE id='$id' AND user_id='$user_id'");
+    $data = mysqli_fetch_assoc($query);
 
-if (mysqli_query($conn, $sql)) {
-    header("Location: ../views/user/dashboard.php");
-    exit;
-} else {
-    echo "Error: " . mysqli_error($conn);
+    if ($data) {
+        // Hapus file gambar fisik
+        $file_path = "../uploads/products/" . $data['photo'];
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+
+        // 4. Hapus Data dari Database
+        $sql = "DELETE FROM product WHERE id='$id' AND user_id='$user_id'";
+
+        if (mysqli_query($conn, $sql)) {
+            showSweetAlert('warning', 'Konfirmasi', 'Yakin ingin menghapus produk ini selamanya?', BASE_URL . 'views/store/my_products.php');
+        } else {
+            echo "<script>alert('Gagal menghapus produk!'); window.location.href='" . BASE_URL . "views/store/my_products.php';</script>";
+        }
+    } else {
+        echo "<script>alert('Produk tidak ditemukan atau bukan milik Anda!'); window.location.href='" . BASE_URL . "views/store/my_products.php';</script>";
+    }
 }
 ?>

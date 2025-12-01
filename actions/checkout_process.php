@@ -2,6 +2,7 @@
 session_start();
 include '../config/conn.php';
 include '../classes/transaksi.php';
+include 'sweet_alert.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: " . BASE_URL . "views/auth/login.php");
@@ -63,10 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateStok->bind_param("iii", $qty, $qty, $product_id);
             $updateStok->execute();
 
-            echo "<script>alert('Transaksi Berhasil! Stok barang telah diperbarui.'); window.location.href='" . BASE_URL . "views/transaction/history.php';</script>";
+            showSweetAlert('success', 'Pesanan Dibuat!', 'Terima kasih telah berbelanja.', BASE_URL . 'views/transaction/history.php');
             exit;
         } else {
-            echo "Terjadi kesalahan saat memproses transaksi.";
+            showSweetAlert('error', 'Gagal Checkout', $e->getMessage(), '../views/transaction/cart.php');
         }
     } catch (Exception $e) {
         echo "Error: " . $e->getMessage();

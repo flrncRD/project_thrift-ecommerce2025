@@ -3,7 +3,6 @@ include '../../config/conn.php';
 include '../../views/layouts/header.php';
 include '../../classes/products.php';
 
-// Cek Login
 if (!isset($_SESSION['user_id'])) {
     echo "<script>window.location.href='" . BASE_URL . "views/auth/login.php';</script>";
     exit();
@@ -12,12 +11,12 @@ if (!isset($_SESSION['user_id'])) {
 $productObj = new Products();
 $user_id = $_SESSION['user_id'];
 
-// Pagination
-$limit = 6;
+// PAGINATION CONFIG
+$limit = 10; // Tampilkan 10 barang per halaman tabel
 $pageActive = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($pageActive > 1) ? ($pageActive * $limit) - $limit : 0;
 
-// Ambil Data
+// AMBIL DATA
 $totalData = $productObj->countByUser($conn, $user_id);
 $totalPages = ceil($totalData / $limit);
 $myProducts = $productObj->getByUserPaginated($conn, $user_id, $start, $limit);
@@ -75,7 +74,7 @@ $myProducts = $productObj->getByUserPaginated($conn, $user_id, $start, $limit);
                                     </a>
 
                                     <a href="<?= BASE_URL ?>actions/product_delete.php?id=<?= $row['id'] ?>"
-                                        onclick="return confirm('Yakin ingin menghapus produk ini selamanya?')"
+                                        onclick="confirmDelete(event)"
                                         class="text-red-500 hover:text-red-700 font-semibold text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50 transition">
                                         Hapus
                                     </a>

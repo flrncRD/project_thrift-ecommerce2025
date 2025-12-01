@@ -1,24 +1,21 @@
 <?php
-session_start();
 include '../config/conn.php';
+include '../classes/reviews.php';
+session_start();
 
-// Cek Admin
-if (!isset($_SESSION['role']) || $_SESSION['role'] != 'admin') {
-    header("Location: " . BASE_URL . "index.php");
+// Cek login
+if (!isset($_SESSION['user_id'])) {
+    echo "<script>alert('Silakan login dulu!'); window.location.href='../views/auth/login.php';</script>";
+    showSweetAlert('success', 'Silahkan Login ', 'Kami akan meninjau laporan Anda', BASE_URL . "views/transaction/report_transaction.php");
     exit();
 }
 
-// Proses Update Laporan
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_status'])) {
-    $report_id = $_POST['report_id'];
-    $status = $_POST['status'];
+$transaksi_id = $_POST['transaksi_id'];
+$rating = $_POST['rating'];
+$review = $_POST['review'];
 
-    $sql = "UPDATE report SET status='$status' WHERE id='$report_id'";
+$rv = new Reviews($transaksi_id, $rating, $review);
+$rv->insert($conn);
 
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Status laporan diperbarui!'); window.location.href='" . BASE_URL . "views/admin/manage_reports.php';</script>";
-    } else {
-        echo "Error: " . mysqli_error($conn);
-    }
-}
+showSweetAlert('success', 'Review berhasil dikirim!', 'Terima kasih atas reviewnya!', BASE_URL . "views/transaction/history.php");
 ?>

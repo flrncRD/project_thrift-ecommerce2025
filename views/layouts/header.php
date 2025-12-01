@@ -3,8 +3,10 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Helper function untuk set menu aktif
 function isActive($page)
 {
+    // Active State: Background Emerald, Teks Putih, Shadow
     return strpos($_SERVER['REQUEST_URI'], $page) !== false ? 'bg-[#059669] text-white shadow-lg ring-2 ring-white/20' : 'hover:bg-white/10 text-blue-100';
 }
 
@@ -17,6 +19,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PindaHand - Thrift Shop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -27,11 +30,16 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
 
 <body class="bg-[#F8FAFC] font-[Inter] text-slate-800 overflow-x-hidden">
 
-    <nav class="fixed top-0 z-50 w-full bg-white border-b-2 border-gray-200 h-20 flex items-center px-6 justify-between shadow-sm">
-        
+    <nav
+        class="fixed top-0 z-50 w-full bg-white border-b-2 border-gray-200 h-20 flex items-center px-6 justify-between shadow-sm">
+
         <div class="flex items-center gap-4 md:gap-6 w-auto md:w-64">
-            <button onclick="toggleSidebar()" class="p-2 rounded-full hover:bg-gray-100 text-[#1E3A8A] focus:outline-none transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <button onclick="toggleSidebar()"
+                class="p-2 rounded-full hover:bg-gray-100 text-[#1E3A8A] focus:outline-none transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
             </button>
 
             <a href="<?= BASE_URL ?>index.php"
@@ -40,7 +48,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                 <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#FACC15] ml-1"></div>
             </a>
         </div>
-    
+
         <div class="hidden md:flex flex-1 max-w-3xl mx-4 relative z-50">
             <form action="<?= BASE_URL ?>views/market/search.php" method="GET" class="relative w-full flex" x-data="{ 
                         catOpen: false, 
@@ -60,21 +68,23 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                             return this.selectedCats.length + ' Kategori';
                         }
                     }">
-    
+
                 <div class="relative">
                     <button type="button" @click="catOpen = !catOpen"
                         class="h-full bg-gray-100 border-r border-gray-300 text-gray-700 text-sm rounded-l-full pl-5 pr-8 py-3 focus:outline-none hover:bg-gray-200 transition font-bold flex items-center gap-2 whitespace-nowrap w-40 justify-between">
                         <span x-text="label"></span>
                         <svg class="w-4 h-4 text-gray-500 transform transition-transform duration-200"
                             :class="{'rotate-180': catOpen}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
                         </svg>
                     </button>
-    
+
                     <div x-show="catOpen" @click.away="catOpen = false" x-transition
                         class="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 overflow-hidden"
                         style="display: none;">
-                        <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Pilih Kategori</div>
+                        <div class="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Pilih Kategori
+                        </div>
                         <?php
                         if (isset($conn)) {
                             mysqli_data_seek($cats_header, 0);
@@ -100,13 +110,13 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                             Reset Filter</div>
                     </div>
                 </div>
-    
+
                 <template x-for="id in selectedCats"><input type="hidden" name="kategori[]" :value="id"></template>
-    
+
                 <input type="text" name="keyword" placeholder="Cari barang disini..."
                     class="w-full bg-gray-100 border-2 border-transparent text-gray-800 text-base font-medium py-3 pl-4 pr-12 focus:outline-none focus:bg-white focus:border-[#1E3A8A] focus:ring-0 transition placeholder-gray-500 shadow-inner rounded-r-full"
                     value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>">
-    
+
                 <button type="submit"
                     class="absolute right-0 top-0 h-full bg-[#1E3A8A] text-white rounded-r-full px-6 hover:bg-blue-900 transition flex items-center justify-center z-10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,10 +126,10 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                 </button>
             </form>
         </div>
-    
+
         <div class="flex items-center gap-4 md:gap-6">
             <?php if (isset($_SESSION['username'])): ?>
-    
+
                 <a href="<?= BASE_URL ?>views/store/add.php"
                     class="hidden md:flex items-center gap-2 bg-[#FACC15] text-[#1E3A8A] px-5 py-2.5 rounded-full font-bold text-base hover:bg-yellow-300 transition shadow-md border-2 border-[#1E3A8A]/10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +137,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                     </svg>
                     <span>Jual</span>
                 </a>
-    
+
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" class="flex items-center gap-3 focus:outline-none group">
                         <div class="text-right hidden md:block">
@@ -139,25 +149,34 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                             <?= strtoupper(substr($_SESSION['username'], 0, 1)) ?>
                         </div>
                     </button>
-    
+
                     <div x-show="open" @click.away="open = false" x-transition
                         class="absolute right-0 mt-4 w-80 bg-white rounded-xl shadow-2xl border-2 border-gray-100 py-2 z-50"
                         style="display: none;">
                         <div class="py-2">
                             <a href="<?= BASE_URL ?>views/user/profile.php"
-                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition"><span
-                                    class="w-8 text-xl text-center">👤</span> Profil Saya</a>
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <div class="flex-shrink-0 w-6 text-center mr-4">
+                                    <i class="fa-solid fa-user text-lg"></i>
+                                </div>Profil Saya
+                            </a>
                             <a href="<?= BASE_URL ?>views/transaction/history.php"
-                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition"><span
-                                    class="w-8 text-xl text-center">📦</span> Riwayat Pesanan</a>
+                                class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
+                                <div class="flex-shrink-0 w-6 text-center mr-4">
+                                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                                </div>Riwayat Pesanan
+                            </a>
                         </div>
                         <div class="border-t border-gray-200 my-1"></div>
                         <a href="<?= BASE_URL ?>actions/auth_logout.php" onclick="confirmLogout(event)"
-                            class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition"><span
-                                class="w-8 text-xl text-center">🚪</span> Keluar (Logout)</a>
+                            class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition">
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                            </div>Keluar (Logout)
+                        </a>
                     </div>
                 </div>
-    
+
             <?php else: ?>
                 <div class="flex items-center gap-4 text-base font-bold text-gray-600">
                     <a href="<?= BASE_URL ?>views/auth/login.php"
@@ -192,7 +211,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                     style="display: none;">
                     <?php
                     if (isset($conn)) {
-                        // Reset pointer query
+                        // PENTING: Reset pointer query agar bisa dipakai lagi
                         mysqli_data_seek($cats_header, 0);
                         while ($c = mysqli_fetch_assoc($cats_header)):
                             ?>
@@ -259,11 +278,15 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                     <div class="py-2">
                         <a href="<?= BASE_URL ?>views/user/profile.php"
                             class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
-                            <span class="w-8 text-xl text-center">👤</span> Profil Saya
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-user text-lg"></i>
+                            </div>Profil Saya
                         </a>
                         <a href="<?= BASE_URL ?>views/transaction/history.php"
                             class="flex items-center px-6 py-4 text-base font-bold text-gray-700 hover:bg-blue-50 transition">
-                            <span class="w-8 text-xl text-center">📦</span> Riwayat Pesanan
+                            <div class="flex-shrink-0 w-6 text-center mr-4">
+                                <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                            </div>Riwayat Pesanan
                         </a>
                     </div>
 
@@ -271,7 +294,9 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
 
                     <a href="<?= BASE_URL ?>actions/auth_logout.php" onclick="confirmLogout(event)"
                         class="flex items-center px-6 py-4 text-base font-bold text-red-600 hover:bg-red-50 transition">
-                        <span class="w-8 text-xl text-center">🚪</span> Keluar (Logout)
+                        <div class="flex-shrink-0 w-6 text-center mr-4">
+                            <i class="fa-solid fa-right-from-bracket text-lg"></i>
+                        </div>Keluar (Logout)
                     </a>
                 </div>
             </div>

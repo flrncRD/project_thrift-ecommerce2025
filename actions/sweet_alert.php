@@ -1,6 +1,7 @@
 <?php
 // Fungsi reusable untuk menampilkan SweetAlert di file Action
-function showSweetAlert($icon, $title, $text, $redirectUrl) {
+function showSweetAlert($icon, $title, $text, $redirectUrl)
+{
     echo '<!DOCTYPE html>
     <html lang="id">
     <head>
@@ -26,6 +27,6 @@ function showSweetAlert($icon, $title, $text, $redirectUrl) {
         </script>
     </body>
     </html>';
-    exit(); // Matikan script php agar tidak lanjut eksekusi
+    exit();
 }
 ?>

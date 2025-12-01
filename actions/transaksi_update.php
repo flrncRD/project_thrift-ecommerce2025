@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../config/conn.php';
+include 'sweet_alert.php';
 
 // Cek Login
 if (!isset($_SESSION['user_id'])) {
@@ -9,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $trx_id = $_POST['trx_id'];
-    $action = $_POST['action'];
+    $action = $_POST['action']; // 'kirim' atau 'selesai'
 
     $status_baru = '';
 
@@ -25,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("si", $status_baru, $trx_id);
 
         if ($stmt->execute()) {
-            echo "<script>alert('Status pesanan berhasil diperbarui!'); window.location.href='" . BASE_URL . "views/transaction/invoice.php?id=" . $trx_id . "';</script>";
+            showSweetAlert('success', 'Status Diperbarui', 'Status pesanan berhasil diubah.', BASE_URL . "views/transaction/detail_transaksi.php?id=$id");
         } else {
-            echo "Error update: " . $conn->error;
+            showSweetAlert('error', 'Error', mysqli_error($conn), BASE_URL . "views/transaction/detail_transaksi.php?id=$id");
         }
     } else {
         echo "Aksi tidak valid.";
