@@ -3,6 +3,29 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (isset($_SESSION['user_id'])) {
+    $id_current = $_SESSION['user_id'];
+
+    if (isset($conn)) {
+        $checkStatus = mysqli_query($conn, "SELECT status FROM user WHERE id = '$id_current'");
+
+        if ($checkStatus && mysqli_num_rows($checkStatus) > 0) {
+            $uData = mysqli_fetch_assoc($checkStatus);
+
+            if ($uData['status'] == 'inactive') {
+                session_unset();
+                session_destroy();
+
+                echo "<script>
+                    alert('AKSES DITOLAK! \\n\\nAkun Anda telah dinonaktifkan oleh Admin saat sesi sedang berjalan.');
+                    window.location.href = '" . BASE_URL . "views/auth/login.php';
+                </script>";
+                exit();
+            }
+        }
+    }
+}
+
 // Helper function untuk set menu aktif
 function isActive($page)
 {
