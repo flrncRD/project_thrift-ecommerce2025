@@ -3,10 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Helper function untuk set menu aktif
 function isActive($page)
 {
-    // Active State: Background Emerald, Teks Putih, Shadow
     return strpos($_SERVER['REQUEST_URI'], $page) !== false ? 'bg-[#059669] text-white shadow-lg ring-2 ring-white/20' : 'hover:bg-white/10 text-blue-100';
 }
 
@@ -201,7 +199,7 @@ $cats_header = mysqli_query($conn, "SELECT * FROM kategori");
                     style="display: none;">
                     <?php
                     if (isset($conn)) {
-                        // PENTING: Reset pointer query agar bisa dipakai lagi
+                        // Reset pointer query
                         mysqli_data_seek($cats_header, 0);
                         while ($c = mysqli_fetch_assoc($cats_header)):
                             ?>

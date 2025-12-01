@@ -5,38 +5,35 @@ include '../../classes/products.php';
 
 $productObj = new Products();
 
-// 1. Ambil Keyword
+// Ambil Keyword
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 
-// 2. Ambil Kategori (Bisa Array, Bisa String, Bisa Kosong)
+// Ambil Kategori (Array)
 $kategori_ids = [];
 if (isset($_GET['kategori'])) {
-    // Pastikan formatnya selalu array
     $kategori_ids = is_array($_GET['kategori']) ? $_GET['kategori'] : [$_GET['kategori']];
 }
 
-// 2. Pagination
-$limit = 12;
+// Konfigurasi Pagination
+$limit = 5;
 $pageActive = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $start = ($pageActive > 1) ? ($pageActive * $limit) - $limit : 0;
 
-// 3. Ambil Data (Kirim Array)
+// Ambil Data
 $totalData = $productObj->countSearch($conn, $keyword, $kategori_ids);
 $totalPages = ceil($totalData / $limit);
 $products = $productObj->searchProducts($conn, $keyword, $start, $limit, $kategori_ids);
 
-// Helper function untuk membuat Link Pagination yang support Array
+// Helper Link Pagination
 function buildUrl($page, $keyword, $kategori_ids)
 {
     $params = [
         'keyword' => $keyword,
         'page' => $page
     ];
-    // Gabungkan dengan array kategori
     if (!empty($kategori_ids)) {
         $params['kategori'] = $kategori_ids;
     }
-    // http_build_query otomatis menangani array menjadi &kategori[0]=1&kategori[1]=2
     return '?' . http_build_query($params);
 }
 ?>

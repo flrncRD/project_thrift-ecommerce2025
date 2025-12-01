@@ -9,9 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
 
@@ -22,8 +20,7 @@
         <div class="w-full md:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 bg-white z-10">
 
             <div class="mb-10">
-                <a href="<?= BASE_URL ?>index.php"
-                    class="text-3xl font-extrabold flex items-center gap-1 text-[#1E3A8A]">
+                <a href="<?= BASE_URL ?>index.php" class="text-3xl font-extrabold flex items-center gap-1 text-[#1E3A8A]">
                     Pinda<span class="text-[#059669]">Hand</span>
                     <div class="w-3 h-3 rounded-full bg-[#FACC15] ml-1"></div>
                 </a>
@@ -50,8 +47,7 @@
                     <a href="#" class="text-sm text-[#059669] font-semibold hover:underline">Forgot Password?</a>
                 </div>
 
-                <button type="submit"
-                    class="w-full bg-[#1E3A8A] text-white font-bold py-3.5 rounded-lg hover:bg-blue-900 transition duration-300 shadow-lg transform active:scale-95">
+                <button type="submit" class="w-full bg-[#1E3A8A] text-white font-bold py-3.5 rounded-lg hover:bg-blue-900 transition duration-300 shadow-lg transform active:scale-95">
                     Sign In
                 </button>
             </form>
@@ -72,5 +68,4 @@
     </div>
 
 </body>
-
 </html>

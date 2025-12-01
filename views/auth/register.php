@@ -13,7 +13,6 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Custom scrollbar untuk form yang panjang */
         .hide-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
@@ -68,12 +67,12 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">City</label>
-                        <input type="text" name="txtkota" placeholder="Surabaya" required 
+                        <input type="text" name="txtkota" placeholder="Surabaya" required
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition text-gray-900 text-sm">
                     </div>
                     <div>
                         <label class="block text-gray-700 text-xs font-bold uppercase tracking-wide mb-2">Phone</label>
-                        <input type="tel" name="txtphone" placeholder="0812xxxx (Angka Saja)" required 
+                        <input type="tel" name="txtphone" placeholder="0812xxxx (Angka Saja)" required
                             pattern="[0-9]{8,15}"
                             title="Nomor HP harus berupa angka, minimal 8-15 digit (Contoh: 08123456789)"
                             class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#059669] focus:border-transparent transition text-gray-900 text-sm">
