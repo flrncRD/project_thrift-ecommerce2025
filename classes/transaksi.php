@@ -43,7 +43,7 @@ class Transaksi
         $this->createdAt = date("Y-m-d H:i:s");
 
         // Validasi
-        $allowed_payment = ['transfer', 'cod', 'E-wallet'];
+        $allowed_payment = ['transfer', 'cod', 'ewallet'];
         if (!in_array($this->jenis_pembayaran, $allowed_payment)) {
             throw new Exception("Jenis pembayaran tidak valid");
         }

@@ -8,8 +8,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Ambil Data User Terbaru dari Database
 $id = $_SESSION['user_id'];
+
+// Ambil Data User
 $query = mysqli_query($conn, "SELECT * FROM user WHERE id = '$id'");
 $userData = mysqli_fetch_assoc($query);
 ?>
@@ -22,11 +23,14 @@ $userData = mysqli_fetch_assoc($query);
 
         <div class="lg:col-span-1">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center sticky top-24">
-                <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden border-4 border-[#FACC15] mb-4 relative group">
+                <div
+                    class="w-32 h-32 mx-auto bg-gray-200 rounded-full overflow-hidden border-4 border-[#FACC15] mb-4 relative group">
                     <?php if (!empty($userData['photo'])): ?>
-                        <img src="<?= BASE_URL ?>uploads/profile/<?= $userData['photo'] ?>" class="w-full h-full object-cover">
+                        <img src="<?= BASE_URL ?>uploads/profile/<?= $userData['photo'] ?>"
+                            class="w-full h-full object-cover">
                     <?php else: ?>
-                        <div class="w-full h-full flex items-center justify-center bg-[#1E3A8A] text-white text-4xl font-bold">
+                        <div
+                            class="w-full h-full flex items-center justify-center bg-[#1E3A8A] text-white text-4xl font-bold">
                             <?= substr($userData['username'], 0, 1) ?>
                         </div>
                     <?php endif; ?>
@@ -53,18 +57,20 @@ $userData = mysqli_fetch_assoc($query);
 
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
                 <h3 class="text-xl font-bold text-[#1E3A8A] mb-6 border-b pb-2">Edit Profil</h3>
-                
-                <form action="<?= BASE_URL ?>actions/user_profile_update.php" method="POST" enctype="multipart/form-data">
-                    
+
+                <form action="<?= BASE_URL ?>actions/user_profile_update.php" method="POST"
+                    enctype="multipart/form-data">
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                         <div>
-                            <label class="block text-gray-700 font-bold mb-2 text-sm">Username (Tidak bisa diubah)</label>
-                            <input type="text" value="<?= $userData['username'] ?>" disabled 
+                            <label class="block text-gray-700 font-bold mb-2 text-sm">Username (Tidak bisa
+                                diubah)</label>
+                            <input type="text" value="<?= $userData['username'] ?>" disabled
                                 class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-500 cursor-not-allowed">
                         </div>
                         <div>
                             <label class="block text-gray-700 font-bold mb-2 text-sm">Email (Tidak bisa diubah)</label>
-                            <input type="email" value="<?= $userData['email'] ?>" disabled 
+                            <input type="email" value="<?= $userData['email'] ?>" disabled
                                 class="w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded text-gray-500 cursor-not-allowed">
                         </div>
                     </div>
@@ -96,7 +102,7 @@ $userData = mysqli_fetch_assoc($query);
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" name="update_profile" 
+                        <button type="submit" name="update_profile"
                             class="bg-[#1E3A8A] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-900 transition shadow-lg flex items-center gap-2">
                             <span>💾</span> Simpan Perubahan
                         </button>
@@ -110,7 +116,7 @@ $userData = mysqli_fetch_assoc($query);
                 </h3>
 
                 <form action="<?= BASE_URL ?>actions/user_profile_update.php" method="POST">
-                    
+
                     <div class="mb-4">
                         <label class="block text-gray-700 font-bold mb-2 text-sm">Password Lama</label>
                         <input type="password" name="old_password" required placeholder="Masukkan password saat ini"
@@ -120,12 +126,14 @@ $userData = mysqli_fetch_assoc($query);
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <label class="block text-gray-700 font-bold mb-2 text-sm">Password Baru</label>
-                            <input type="password" name="new_password" required placeholder="Minimal 6 karakter" minlength="6"
+                            <input type="password" name="new_password" required placeholder="Minimal 6 karakter"
+                                minlength="6"
                                 class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 outline-none transition">
                         </div>
                         <div>
                             <label class="block text-gray-700 font-bold mb-2 text-sm">Konfirmasi Password Baru</label>
-                            <input type="password" name="confirm_password" required placeholder="Ulangi password baru" minlength="6"
+                            <input type="password" name="confirm_password" required placeholder="Ulangi password baru"
+                                minlength="6"
                                 class="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 outline-none transition">
                         </div>
                     </div>
@@ -135,7 +143,7 @@ $userData = mysqli_fetch_assoc($query);
                     </div>
 
                     <div class="flex justify-end">
-                        <button type="submit" name="change_password" 
+                        <button type="submit" name="change_password"
                             class="bg-red-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-red-700 transition shadow-lg">
                             Update Password
                         </button>

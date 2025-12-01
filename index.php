@@ -3,18 +3,9 @@ include 'config/conn.php';
 include 'views/layouts/header.php';
 include 'classes/products.php';
 
-// Inisialisasi Class
 $productObj = new Products();
-
-// 1. Ambil Data Kategori (Untuk Section Categories)
 $kategoriQuery = $productObj->getCategories($conn);
-
-// 2. Ambil Produk "Best Quality" (Kita asumsikan barang termahal/terbaru)
-// Limit 8 barang
 $bestProducts = $productObj->getBestProducts($conn);
-
-// 3. Ambil Produk "Popular" (Kita asumsikan barang Random)
-// Limit 4 barang
 $popProducts = $productObj->getPopularProducts($conn);
 ?>
 
@@ -31,14 +22,14 @@ $popProducts = $productObj->getPopularProducts($conn);
     <div x-data="{
             activeSlide: 0,
             slides: [
-                'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop', // Gambar 1 (Fashion)
-                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop', // Gambar 2 (Thrift Store)
-                'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop'  // Gambar 3 (Clothing Rack)
+                'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop', 
+                'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2070&auto=format&fit=crop',
+                'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop'
             ],
             loop() {
                 setInterval(() => {
                     this.activeSlide = (this.activeSlide === this.slides.length - 1) ? 0 : this.activeSlide + 1;
-                }, 5000); // Bergerak setiap 5000ms (5 detik)
+                }, 5000);
             }
         }" x-init="loop()" class="relative w-full rounded-xl overflow-hidden shadow-lg mb-10 group h-64 md:h-[400px]">
 
@@ -78,21 +69,6 @@ $popProducts = $productObj->getPopularProducts($conn);
         </div>
 
     </div>
-
-    <!-- ### Penjelasan Perubahan:
-
-1.  **Alpine JS (`x-data`)**:
-    * `slides`: Array yang berisi link gambar (saya pakai gambar dari Unsplash sebagai contoh). Kamu bisa menggantinya dengan path gambar lokal nanti.
-    * `loop()`: Fungsi `setInterval` yang berjalan setiap **5000ms (5 detik)** untuk mengubah `activeSlide` ke slide berikutnya secara otomatis.
-2.  **Transisi (`transition-transform`)**:
-    * Kita menggunakan CSS Transform untuk menggeser gambar ke kiri/kanan dengan mulus (`duration-700`).
-3.  **Responsif**:
-    * Saya ubah tinggi containernya: `h-64` (untuk HP) dan `md:h-[400px]` (untuk Laptop/PC) agar gambar terlihat lebih besar dan jelas.
-4.  **Kontrol (Panah & Dots)**:
-    * Saya tambahkan tombol Next/Prev yang hanya muncul saat mouse diarahkan ke banner (`group-hover:opacity-100`).
-    * Ada indikator titik-titik di bawah untuk menunjukkan sedang di slide ke berapa.
-
-Silakan simpan dan refresh halaman index kamu. Banner Hero Section sekarang sudah berubah menjadi slideshow gambar yang bergerak! -->
 
     <!-- <div class="mb-12">
         <h2 class="text-2xl font-bold text-slate-800 mb-6">Categories</h2>

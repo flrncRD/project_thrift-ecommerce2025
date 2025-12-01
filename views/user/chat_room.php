@@ -2,7 +2,7 @@
 include '../../config/conn.php';
 include '../../views/layouts/header.php';
 
-// Validasi
+// Validasi Login & Partner
 if (!isset($_SESSION['user_id']) || !isset($_GET['partner_id'])) {
     echo "<script>window.location.href='" . BASE_URL . "index.php';</script>";
     exit();
@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || !isset($_GET['partner_id'])) {
 $my_id = $_SESSION['user_id'];
 $partner_id = $_GET['partner_id'];
 
-// Ambil data Partner Chat
+// Ambil data Partner
 $partnerQuery = mysqli_query($conn, "SELECT username, photo, role FROM user WHERE id = '$partner_id'");
 $partner = mysqli_fetch_assoc($partnerQuery);
 
@@ -96,10 +96,12 @@ if (!$partner)
     const partnerId = document.getElementById('partner_id').value;
     const baseUrl = "<?= BASE_URL ?>";
 
+    // Auto scroll ke bawah
     function scrollToBottom() {
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
+    // Ambil pesan (AJAX)
     function fetchMessages() {
         const formData = new FormData();
         formData.append('action', 'fetch_chat');
@@ -111,14 +113,16 @@ if (!$partner)
         })
             .then(response => response.text())
             .then(data => {
+                // Update hanya jika ada pesan baru
                 if (chatContainer.innerHTML !== data) {
                     chatContainer.innerHTML = data;
-                    markChatRead();
+                    markChatRead(); // Tandai sudah dibaca
                 }
             })
             .catch(error => console.error('Error:', error));
     }
 
+    // Kirim pesan
     chatForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const message = messageInput.value.trim();
@@ -130,7 +134,6 @@ if (!$partner)
         formData.append('penerima_id', partnerId);
         formData.append('message', message);
 
-        // Optimistic UI: Tambahkan bubble sementara (opsional) atau langsung kirim
         fetch(baseUrl + 'actions/chat_server.php', {
             method: 'POST',
             body: formData
@@ -139,13 +142,14 @@ if (!$partner)
             .then(data => {
                 if (data === "success") {
                     messageInput.value = "";
-                    fetchMessages();
+                    fetchMessages(); // Refresh chat
                     setTimeout(scrollToBottom, 200);
                 }
             });
     });
 
+    // Jalankan pertama kali & Interval
     fetchMessages();
-    setInterval(fetchMessages, 2000);
+    setInterval(fetchMessages, 2000); // Cek pesan tiap 2 detik
     markChatRead();
 </script>
